@@ -1,0 +1,18 @@
+# Auto detect text files and perform LF normalization
+*          text=auto
+
+*.cs       text diff=csharp
+*.cshtml   text diff=html
+*.csx      text diff=csharp
+*.sln      text eol=crlf
+*.slnx     text eol=crlf
+*.csproj   text eol=crlf
+
+# Web assets (force LF)
+*.js       text eol=lf
+*.css      text eol=lf
+*.html     text eol=lf
+*.json     text eol=lf
+*.min.js   text eol=lf
+*.min.css  text eol=lf
+*.cshtml.css text eol=lf
