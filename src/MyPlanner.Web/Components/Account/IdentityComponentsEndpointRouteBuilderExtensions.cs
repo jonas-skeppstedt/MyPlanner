@@ -11,7 +11,7 @@ using MyPlanner.Web.Data;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Microsoft.AspNetCore.Routing
+namespace MyPlanner.Web.Components.Account
 {
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {

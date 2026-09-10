@@ -1,10 +1,14 @@
 <Solution>
-  <Project Path="src/MyPlanner.Application/MyPlanner.Application.csproj" Id="be2b9356-3b11-4799-a69a-7cf98143554a" />
-  <Project Path="src/MyPlanner.Domain/MyPlanner.Domain.csproj" Id="1ab73b9f-e6bd-4458-a57d-ddfd76423830" />
-  <Project Path="src/MyPlanner.Infrastructure/MyPlanner.Infrastructure.csproj" Id="38f82506-804f-438f-a54a-678dbd1ecf7d" />
-  <Project Path="src/MyPlanner.Web/MyPlanner.Web.csproj" Id="7350498a-1daf-419b-a117-94a2634d8bb2" />
-  <Project Path="tests/MyPlanner.Application.IntegrationTests/MyPlanner.Application.IntegrationTests.csproj" Id="b21207a9-f5b0-490d-b077-b2dd25fc8329" />
-  <Project Path="tests/MyPlanner.Application.UnitTests/MyPlanner.Application.UnitTests.csproj" Id="9462fae6-8475-4325-a892-802b8cdd48ff" />
-  <Project Path="tests/MyPlanner.Domain.UnitTests/MyPlanner.Domain.UnitTests.csproj" Id="180c3357-7dae-49b6-9a92-7ca596477c78" />
-  <Project Path="tests/MyPlanner.Infrastructure.IntegrationTests/MyPlanner.Infrastructure.IntegrationTests.csproj" Id="10eb5b44-4908-41d4-92e1-fbb8ccc7bee1" />
+  <Folder Name="/src/">
+    <Project Path="src/MyPlanner.Application/MyPlanner.Application.csproj" Id="be2b9356-3b11-4799-a69a-7cf98143554a" />
+    <Project Path="src/MyPlanner.Domain/MyPlanner.Domain.csproj" Id="1ab73b9f-e6bd-4458-a57d-ddfd76423830" />
+    <Project Path="src/MyPlanner.Infrastructure/MyPlanner.Infrastructure.csproj" Id="38f82506-804f-438f-a54a-678dbd1ecf7d" />
+    <Project Path="src/MyPlanner.Web/MyPlanner.Web.csproj" Id="7350498a-1daf-419b-a117-94a2634d8bb2" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MyPlanner.Application.IntegrationTests/MyPlanner.Application.IntegrationTests.csproj" Id="b21207a9-f5b0-490d-b077-b2dd25fc8329" />
+    <Project Path="tests/MyPlanner.Application.UnitTests/MyPlanner.Application.UnitTests.csproj" Id="9462fae6-8475-4325-a892-802b8cdd48ff" />
+    <Project Path="tests/MyPlanner.Domain.UnitTests/MyPlanner.Domain.UnitTests.csproj" Id="180c3357-7dae-49b6-9a92-7ca596477c78" />
+    <Project Path="tests/MyPlanner.Infrastructure.IntegrationTests/MyPlanner.Infrastructure.IntegrationTests.csproj" Id="10eb5b44-4908-41d4-92e1-fbb8ccc7bee1" />
+  </Folder>
 </Solution>
