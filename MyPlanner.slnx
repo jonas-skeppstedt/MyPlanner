@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="src/MyPlanner.Application/MyPlanner.Application.csproj" Id="be2b9356-3b11-4799-a69a-7cf98143554a" />
+  <Project Path="src/MyPlanner.Domain/MyPlanner.Domain.csproj" Id="1ab73b9f-e6bd-4458-a57d-ddfd76423830" />
+  <Project Path="src/MyPlanner.Infrastructure/MyPlanner.Infrastructure.csproj" Id="38f82506-804f-438f-a54a-678dbd1ecf7d" />
+  <Project Path="src/MyPlanner.Web/MyPlanner.Web.csproj" Id="7350498a-1daf-419b-a117-94a2634d8bb2" />
+</Solution>
