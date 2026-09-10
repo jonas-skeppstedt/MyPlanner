@@ -1,7 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+using MyPlanner.Infrastructure;
 using MyPlanner.Web.Components;
 using MyPlanner.Web.Components.Account;
-using MyPlanner.Web.Data;
 
 namespace MyPlanner.Web
 {
@@ -11,12 +10,9 @@ namespace MyPlanner.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddWeb();
             builder.Services.AddIdentityServices();
-
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(connectionString));
 
             var app = builder.Build();
 

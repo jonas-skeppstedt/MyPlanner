@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using MyPlanner.Infrastructure.Persistence;
 using MyPlanner.Web.Components.Account.Pages;
 using MyPlanner.Web.Components.Account.Pages.Manage;
-using MyPlanner.Web.Data;
 using System.Security.Claims;
 using System.Text.Json;
 

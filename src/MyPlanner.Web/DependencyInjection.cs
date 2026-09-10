@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MyPlanner.Infrastructure.Persistence;
 using MyPlanner.Web.Components.Account;
-using MyPlanner.Web.Data;
 
 namespace MyPlanner.Web
 {
