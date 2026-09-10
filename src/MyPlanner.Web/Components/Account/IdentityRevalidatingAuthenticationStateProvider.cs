@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
-using MyPlanner.Web.Data;
+using MyPlanner.Infrastructure.Persistence;
 using System.Security.Claims;
 
 namespace MyPlanner.Web.Components.Account

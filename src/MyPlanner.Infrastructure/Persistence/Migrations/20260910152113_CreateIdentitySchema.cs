@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MyPlanner.Web.Migrations
+namespace MyPlanner.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration

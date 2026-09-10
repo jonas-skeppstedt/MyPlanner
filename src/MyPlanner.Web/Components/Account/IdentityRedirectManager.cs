@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
-using MyPlanner.Web.Data;
+using MyPlanner.Infrastructure.Persistence;
 
 namespace MyPlanner.Web.Components.Account
 {
