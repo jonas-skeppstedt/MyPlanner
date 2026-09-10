@@ -1,3 +1,4 @@
+using MyPlanner.Application;
 using MyPlanner.Infrastructure;
 using MyPlanner.Web.Components;
 using MyPlanner.Web.Components.Account;
@@ -10,6 +11,7 @@ namespace MyPlanner.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddApplication();
             builder.Services.AddInfrastructure(builder.Configuration);
             builder.Services.AddWeb();
             builder.Services.AddIdentityServices();
