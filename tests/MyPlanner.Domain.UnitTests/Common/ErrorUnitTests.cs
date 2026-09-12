@@ -55,5 +55,22 @@ namespace MyPlanner.Domain.UnitTests.Common
             Assert.ThrowsAny<ArgumentException>(() => Error.Forbidden(code!, description!));
             Assert.ThrowsAny<ArgumentException>(() => Error.Failure(code!, description!));
         }
+
+        [Fact]
+        public void None_ShouldRepresentNoError()
+        {
+            // Arrange
+            var expectedType = ErrorType.None;
+            var expectedCode = string.Empty;
+            var expectedDescription = string.Empty;
+
+            // Act
+            var error = Error.None;
+
+            // Assert
+            Assert.Equal(expectedType, error.Type);
+            Assert.Equal(expectedCode, error.Code);
+            Assert.Equal(expectedDescription, error.Description);
+        }
     }
 }

@@ -2,12 +2,30 @@
 {
     public sealed record Error
     {
+        public static readonly Error None = new();
+
         public ErrorType Type { get; }
         public string Code { get; }
         public string Description { get; }
 
+        // Private parameterless constructor for Error.None instance.
+        private Error()
+        {
+            Type = ErrorType.None;
+            Code = string.Empty;
+            Description = string.Empty;
+        }
+
+        // Main private constructor enforcing error type invariants
         private Error(ErrorType errorType, string code, string description)
         {
+            if (errorType == ErrorType.None)
+            {
+                throw new ArgumentException(
+                    "ErrorType.None may only be used in Error.None",
+                    nameof(errorType));
+            }
+
             ArgumentException.ThrowIfNullOrWhiteSpace(code);
             ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
