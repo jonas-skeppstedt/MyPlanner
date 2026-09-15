@@ -4,6 +4,8 @@
     {
         private readonly ResultOutcomeType _outcome;
 
+        protected ResultOutcomeType Outcome => _outcome;
+
         public bool IsSuccess => _outcome == ResultOutcomeType.Success;
         public bool IsNoOp => _outcome == ResultOutcomeType.NoOp;
         public bool IsFailure => _outcome == ResultOutcomeType.Failure;

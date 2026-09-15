@@ -5,7 +5,7 @@
         private readonly T? _value;
 
         public T Value => _value
-            ?? throw new InvalidOperationException("Cannot access Value of a failure or no-op result.");
+            ?? throw new InvalidOperationException($"Cannot access Value of a '{Outcome}' result.");
 
         private Result(T? value, ResultOutcomeType resultOutcomeType, Error error)
             : base(resultOutcomeType, error)
