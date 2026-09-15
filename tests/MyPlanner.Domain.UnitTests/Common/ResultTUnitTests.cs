@@ -114,7 +114,21 @@ namespace MyPlanner.Domain.UnitTests.Common
         [Fact]
         public void ImplicitOperator_ShouldThrowArgumentException_WhenErrorIsErrorNone()
         {
-            Assert.Throws<ArgumentException>(() => { Result<string> _ = Error.None; });
+            Assert.Throws<ArgumentException>(() =>
+            {
+                Result<string> _ = Error.None;
+            });
+        }
+
+        [Fact]
+        public void ImplicitOperator_ShouldThrowArgumentNullException_WhenErrorIsNull()
+        {
+            Error nullError = null!;
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                Result<string> _ = nullError;
+            });
         }
     }
 }
