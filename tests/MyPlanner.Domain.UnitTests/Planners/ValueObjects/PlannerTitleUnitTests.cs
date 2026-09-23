@@ -66,5 +66,19 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
             Assert.True(result.IsSuccess);
             Assert.Equal(expectedValue, result.Value.Value);
         }
+
+        [Fact]
+        public void ToString_ShouldReturnRawValue()
+        {
+            // Arrange
+            var expectedValue = "Valid title";
+            var plannerTitle = PlannerTitle.Create(expectedValue).Value;
+
+            // Act
+            var result = plannerTitle.ToString();
+
+            // Assert
+            Assert.Equal(expectedValue, result);
+        }
     }
 }

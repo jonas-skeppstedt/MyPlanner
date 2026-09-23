@@ -30,5 +30,7 @@ namespace MyPlanner.Domain.Planners.ValueObjects
 
             return Result<PlannerTitle>.Success(new PlannerTitle(trimmedValue));
         }
+
+        public override string ToString() => Value;
     }
 }
