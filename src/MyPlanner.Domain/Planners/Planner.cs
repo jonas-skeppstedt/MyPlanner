@@ -1,0 +1,41 @@
+﻿using MyPlanner.Domain.Common;
+using MyPlanner.Domain.Planners.ValueObjects;
+using MyPlanner.Domain.Shared;
+
+namespace MyPlanner.Domain.Planners
+{
+    public sealed class Planner
+    {
+        private List<Todo> _todos = new();
+
+        public PlannerId Id { get; private set; }
+        public UserId OwnerId { get; private set; }
+        public PlannerTitle Title { get; private set; }
+
+        public IReadOnlyList<Todo> Todos => _todos;
+
+        private Planner(PlannerId id, UserId ownerId, PlannerTitle title)
+        {
+            Id = id;
+            OwnerId = ownerId;
+            Title = title;
+        }
+
+        /// <summary>
+        /// Used for EF Core materialization. Do not call directly.
+        /// </summary>
+        private Planner()
+        {
+            Title = default!;
+        }
+
+        public static Result<Planner> Create(PlannerId id, UserId ownerId, PlannerTitle title)
+        {
+            id.ThrowIfEmpty(nameof(id));
+            ownerId.ThrowIfEmpty(nameof(ownerId));
+            ArgumentNullException.ThrowIfNull(title);
+
+            return Result<Planner>.Success(new Planner(id, ownerId, title));
+        }
+    }
+}
