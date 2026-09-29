@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyPlanner.Domain.Planners;
 using MyPlanner.Infrastructure.Persistence;
+using MyPlanner.Infrastructure.Persistence.Repositories;
 
 namespace MyPlanner.Infrastructure
 {
@@ -16,6 +18,8 @@ namespace MyPlanner.Infrastructure
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            services.AddScoped<IPlannerRepository, PlannerRepository>();
 
             return services;
         }
