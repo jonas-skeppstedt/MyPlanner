@@ -27,7 +27,7 @@ namespace MyPlanner.Domain.UnitTests.Shared
         public void TryParse_ShouldReturnFalseAndDefault_WhenStringIsInvalid(string? invalidString)
         {
             // Act
-            var result = UserId.TryParse(invalidString!, out var userId);
+            var result = UserId.TryParse(invalidString, out var userId);
 
             // Assert
             Assert.False(result);

@@ -9,7 +9,7 @@
             Value = value;
         }
 
-        public static bool TryParse(string rawString, out UserId userId)
+        public static bool TryParse(string? rawString, out UserId userId)
         {
             if (Guid.TryParse(rawString, out var guid))
             {
