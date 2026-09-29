@@ -10,5 +10,6 @@
     <Project Path="tests/MyPlanner.Application.UnitTests/MyPlanner.Application.UnitTests.csproj" Id="9462fae6-8475-4325-a892-802b8cdd48ff" />
     <Project Path="tests/MyPlanner.Domain.UnitTests/MyPlanner.Domain.UnitTests.csproj" Id="180c3357-7dae-49b6-9a92-7ca596477c78" />
     <Project Path="tests/MyPlanner.Infrastructure.IntegrationTests/MyPlanner.Infrastructure.IntegrationTests.csproj" Id="10eb5b44-4908-41d4-92e1-fbb8ccc7bee1" />
+    <Project Path="tests/MyPlanner.Web.UnitTests/MyPlanner.Web.UnitTests.csproj" Id="93d069f7-0eec-4f30-aa98-8ea552d053c2" />
   </Folder>
 </Solution>
