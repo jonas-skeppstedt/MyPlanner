@@ -15,4 +15,8 @@
     <ProjectReference Include="..\MyPlanner.Domain\MyPlanner.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="MyPlanner.Application.UnitTests" />
+  </ItemGroup>
+
 </Project>
