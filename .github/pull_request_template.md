@@ -2,10 +2,10 @@
 *Provide a clear, concise description of the changes made in this PR*
 
 ## Type of Change
-
 - [ ] Bug fix (non-breaking change fixing an issue)
 - [ ] New feature (non-breaking change adding functionality)
 - [ ] Breaking change (fix or feature causing existing functionality to break)
+- [ ] Chore (project maintenance or setup)
 - [ ] Refactor / Code Cleanup
 - [ ] Documentation update
 
@@ -15,6 +15,4 @@
 ## PR Checklist
 - [ ] I have performed a self-review of my code
 - [ ] I have removed console logs, debug code, and commented-out blocks
-- [ ] I have added new tests (or explained why tests are not required)
 - [ ] All new and existing tests pass locally
-
