@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyPlanner.Application.Abstractions;
+using MyPlanner.Application.Behaviors;
 using MyPlanner.Application.Contexts;
 
 namespace MyPlanner.Application
@@ -11,6 +12,8 @@ namespace MyPlanner.Application
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+
+                cfg.AddOpenBehavior(typeof(AuthenticationBehavior<,>));
             });
 
             services.AddScoped<IUserContext, UserContext>();
