@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using MyPlanner.Application.Abstractions;
 using MyPlanner.Infrastructure.Persistence;
 using MyPlanner.Web.Components.Account;
+using MyPlanner.Web.Identity;
 
 namespace MyPlanner.Web
 {
@@ -11,6 +13,8 @@ namespace MyPlanner.Web
         {
             services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
         }
