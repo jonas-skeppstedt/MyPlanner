@@ -1,6 +1,6 @@
 ﻿namespace MyPlanner.Domain.Common
 {
-    public sealed record Result<T> : Result
+    public sealed record Result<T> : Result, IFailureBuildable<Result<T>>
     {
         private readonly T? _value;
 

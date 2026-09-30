@@ -1,6 +1,6 @@
 ﻿namespace MyPlanner.Domain.Common
 {
-    public record Result
+    public record Result : IFailureBuildable<Result>
     {
         private readonly ResultOutcomeType _outcome;
 
