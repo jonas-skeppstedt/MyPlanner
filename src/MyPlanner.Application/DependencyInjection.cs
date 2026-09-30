@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MyPlanner.Application.Abstractions;
+using MyPlanner.Application.Contexts;
 
 namespace MyPlanner.Application
 {
@@ -10,6 +12,8 @@ namespace MyPlanner.Application
             {
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
             });
+
+            services.AddScoped<IUserContext, UserContext>();
 
             return services;
         }
