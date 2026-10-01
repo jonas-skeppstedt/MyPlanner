@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Abstractions.Messaging;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Infrastructure.Messaging;
@@ -22,6 +23,8 @@ namespace MyPlanner.Infrastructure
                 options.UseNpgsql(connectionString));
 
             services.AddScoped<IScopedSender, ScopedSender>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IPlannerRepository, PlannerRepository>();
 
