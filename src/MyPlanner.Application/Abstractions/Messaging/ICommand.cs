@@ -3,11 +3,15 @@ using MyPlanner.Domain.Common;
 
 namespace MyPlanner.Application.Abstractions.Messaging
 {
-    public interface ICommand : IRequest<Result>
+    public interface ICommandBase
     {
     }
 
-    public interface ICommand<TResponse> : IRequest<Result<TResponse>>
+    public interface ICommand : IRequest<Result>, ICommandBase
+    {
+    }
+
+    public interface ICommand<TResponse> : IRequest<Result<TResponse>>, ICommandBase
     {
     }
 }
