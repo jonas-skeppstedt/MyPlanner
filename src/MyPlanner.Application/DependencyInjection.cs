@@ -14,6 +14,7 @@ namespace MyPlanner.Application
                 cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
 
                 cfg.AddOpenBehavior(typeof(AuthenticationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
             });
 
             services.AddScoped<IUserContext, UserContext>();
