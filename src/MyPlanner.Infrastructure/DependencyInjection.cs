@@ -3,9 +3,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Abstractions.Messaging;
+using MyPlanner.Application.Features.Planners.Queries;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Infrastructure.Messaging;
 using MyPlanner.Infrastructure.Persistence;
+using MyPlanner.Infrastructure.Persistence.Queries;
 using MyPlanner.Infrastructure.Persistence.Repositories;
 
 namespace MyPlanner.Infrastructure
@@ -27,6 +29,7 @@ namespace MyPlanner.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IPlannerRepository, PlannerRepository>();
+            services.AddScoped<IPlannerQueries, PlannerQueries>();
 
             return services;
         }
