@@ -8,12 +8,12 @@ namespace MyPlanner.Web.UnitTests.Identity
 {
     public class CurrentUserServiceUnitTests
     {
-        private readonly CurrentUserService _currentUserService;
+        private readonly CurrentUserService _sut;
         private readonly Mock<AuthenticationStateProvider> _authenticationStateProviderMock = new();
 
         public CurrentUserServiceUnitTests()
         {
-            _currentUserService = new CurrentUserService(_authenticationStateProviderMock.Object);
+            _sut = new CurrentUserService(_authenticationStateProviderMock.Object);
         }
 
         private AuthenticationState ArrangeAuthenticatedUser(UserId userId)
@@ -51,7 +51,7 @@ namespace MyPlanner.Web.UnitTests.Identity
                 .ReturnsAsync(authState);
 
             // Act
-            var actual = await _currentUserService.GetCurrentUserIdAsync();
+            var actual = await _sut.GetCurrentUserIdAsync();
 
             // Assert
             Assert.Equal(expectedUserId, actual);
@@ -69,7 +69,7 @@ namespace MyPlanner.Web.UnitTests.Identity
                 .ReturnsAsync(authState);
 
             // Act
-            var actual = await _currentUserService.GetCurrentUserIdAsync();
+            var actual = await _sut.GetCurrentUserIdAsync();
 
             // Assert
             Assert.Equal(expectedDefaultUserId, actual);
