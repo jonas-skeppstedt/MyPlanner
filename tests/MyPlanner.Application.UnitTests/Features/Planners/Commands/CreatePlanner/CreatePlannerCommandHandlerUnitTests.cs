@@ -1,11 +1,11 @@
 ﻿using Moq;
 using MyPlanner.Application.Abstractions;
-using MyPlanner.Application.Features.Planners.CreatePlanner;
+using MyPlanner.Application.Features.Planners.Commands.CreatePlanner;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Shared;
 
-namespace MyPlanner.Application.UnitTests.Features.Planners.CreatePlanner
+namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.CreatePlanner
 {
     public class CreatePlannerCommandHandlerUnitTests
     {
