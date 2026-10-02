@@ -1,0 +1,53 @@
+﻿@page "/planners"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using MyPlanner.Application.Abstractions.Messaging
+@using MyPlanner.Application.Features.Planners.Commands.CreatePlanner
+@using MyPlanner.Application.Features.Planners.Queries.GetPlannerOverviews
+@using MyPlanner.Web.Components.Features.Planners.Extensions
+@using MyPlanner.Web.Components.Features.Planners.Models
+
+@inject IScopedSender _sender
+
+<PageTitle>Planner overview</PageTitle>
+
+<h3>Planner overview</h3>
+
+<button @onclick="OnCreateClicked">Create dummy Planner</button>
+
+@foreach (var planner in _plannerOverviewModels)
+{
+    <div>
+        <p>@planner.Id, @planner.Title</p>
+    </div>
+}
+
+@code {
+    private List<PlannerOverviewModel> _plannerOverviewModels = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _sender.Query(new GetPlannerOverviewsQuery());
+
+        if (result.IsSuccess)
+        {
+            var uiModels = result.Value.Select(p => p.ToUiModel()).ToList();
+            _plannerOverviewModels = uiModels;
+        }
+    }
+
+    private async Task OnCreateClicked()
+    {
+        var command = new CreatePlannerCommand("Dummy planner");
+
+        var result = await _sender.Command(command);
+
+        if (result.IsSuccess)
+        {
+            var uiModel = new PlannerOverviewModel(result.Value.PlannerId, result.Value.Title);
+            _plannerOverviewModels.Add(uiModel);
+        }
+    }
+}
