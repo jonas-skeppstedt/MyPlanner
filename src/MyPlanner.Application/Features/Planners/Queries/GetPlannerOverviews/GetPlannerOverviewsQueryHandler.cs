@@ -18,7 +18,7 @@ namespace MyPlanner.Application.Features.Planners.Queries.GetPlannerOverviews
         }
 
         public async Task<Result<IReadOnlyList<PlannerOverviewDto>>> Handle(
-            GetPlannerOverviewsQuery request,
+            GetPlannerOverviewsQuery query,
             CancellationToken cancellationToken)
         {
             var dtos = await _plannerQueries.GetPlannerOverviewsAsync(_userContext.UserId, cancellationToken);
