@@ -4,7 +4,7 @@ using MyPlanner.Domain.Common;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.ValueObjects;
 
-namespace MyPlanner.Application.Features.Planners.CreatePlanner
+namespace MyPlanner.Application.Features.Planners.Commands.CreatePlanner
 {
     internal sealed class CreatePlannerCommandHandler : ICommandHandler<CreatePlannerCommand, CreatePlannerResponse>
     {
