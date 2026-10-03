@@ -1,7 +1,7 @@
 ﻿using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
-using MyPlanner.Domain.UnitTests.Planners.TestData;
+using MyPlanner.Domain.TestData.Planners.TheoryData;
 
 namespace MyPlanner.Domain.UnitTests.Planners
 {

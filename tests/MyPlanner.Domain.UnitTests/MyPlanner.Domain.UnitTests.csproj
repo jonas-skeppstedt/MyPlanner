@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MyPlanner.Domain\MyPlanner.Domain.csproj" />
+    <ProjectReference Include="..\MyPlanner.Domain.TestData\MyPlanner.Domain.TestData.csproj" />
   </ItemGroup>
 
   <ItemGroup>
