@@ -1,6 +1,8 @@
 ﻿using MyPlanner.Domain.Planners;
+using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
+using MyPlanner.Domain.TestData.Planners.Builders;
 using MyPlanner.Domain.TestData.Planners.TheoryData;
 
 namespace MyPlanner.Domain.UnitTests.Planners
@@ -39,6 +41,48 @@ namespace MyPlanner.Domain.UnitTests.Planners
             Assert.Equal(expectedOwnerId, result.Value.OwnerId);
             Assert.Equal(expectedPlannerTitle, result.Value.Title);
             Assert.Empty(result.Value.Todos);
+        }
+
+        [Fact]
+        public void AddTodo_ShouldThrowExpectedException_WhenTodoIsNull()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => planner.AddTodo(null!));
+        }
+
+        [Fact]
+        public void AddTodo_ShouldReturnFailureResult_WhenTodoAlreadyExistsInPlanner()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+            var todo = new TodoBuilder().Build();
+            _ = planner.AddTodo(todo);
+
+            // Act
+            var result = planner.AddTodo(todo);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.TodoAlreadyExists, result.Error);
+            Assert.Single(planner.Todos, t => t == todo);
+        }
+
+        [Fact]
+        public void AddTodo_ShouldReturnSuccessResult_WhenInputIsValid()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+            var planner = new PlannerBuilder().Build();
+
+            // Act
+            var result = planner.AddTodo(todo);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Single(planner.Todos, t => t == todo);
         }
     }
 }

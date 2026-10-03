@@ -6,9 +6,10 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
 {
     public class PlannerBuilder
     {
-        private PlannerId _id;
-        private UserId _ownerId;
+        private PlannerId _id = PlannerId.New();
+        private UserId _ownerId = new UserId(Guid.NewGuid());
         private PlannerTitle _title = PlannerTitle.Create("Planner title").Value;
+        private List<Todo> _todos = new();
 
         public PlannerBuilder WithPlannerId(PlannerId id)
         {
@@ -28,21 +29,22 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
             return this;
         }
 
+        public PlannerBuilder WithTodos(params Todo[] todos)
+        {
+            _todos.AddRange(todos);
+            return this;
+        }
+
         public Planner Build()
         {
-            if (_id.Value == Guid.Empty)
+            var planner = Planner.Create(_id, _ownerId, _title).Value;
+
+            foreach (var todo in _todos)
             {
-                throw new InvalidOperationException(
-                    "Cannot build Planner without a PlannerId. Call WithPlannerId() first.");
+                planner.AddTodo(todo);
             }
 
-            if (_ownerId.Value == Guid.Empty)
-            {
-                throw new InvalidOperationException(
-                    "Cannot build Planner without a OwnerId. Call WithOwnerId() first.");
-            }
-
-            return Planner.Create(_id, _ownerId, _title).Value;
+            return planner;
         }
     }
 }

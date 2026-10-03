@@ -1,4 +1,5 @@
 ﻿using MyPlanner.Domain.Common;
+using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
 
@@ -36,6 +37,20 @@ namespace MyPlanner.Domain.Planners
             ArgumentNullException.ThrowIfNull(title);
 
             return Result<Planner>.Success(new Planner(id, ownerId, title));
+        }
+
+        public Result AddTodo(Todo todo)
+        {
+            ArgumentNullException.ThrowIfNull(todo);
+
+            if (_todos.Any(t => t.Id == todo.Id))
+            {
+                return PlannerErrors.TodoAlreadyExists;
+            }
+
+            _todos.Add(todo);
+
+            return Result.Success();
         }
     }
 }
