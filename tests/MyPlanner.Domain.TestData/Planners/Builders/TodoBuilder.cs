@@ -5,7 +5,7 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
 {
     public class TodoBuilder
     {
-        private TodoId _id;
+        private TodoId _id = TodoId.New();
         private TodoTitle _title = TodoTitle.Create("Todo title").Value;
 
         public TodoBuilder WithTodoId(TodoId id)
@@ -22,12 +22,6 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
 
         public Todo Build()
         {
-            if (_id.Value == Guid.Empty)
-            {
-                throw new InvalidOperationException(
-                    $"Cannot build Todo without a TodoId. Call WithTodoId() first.");
-            }
-
             return Todo.Create(_id, _title).Value;
         }
     }
