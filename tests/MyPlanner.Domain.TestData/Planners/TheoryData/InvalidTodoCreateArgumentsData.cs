@@ -1,7 +1,8 @@
 ﻿using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.ValueObjects;
+using Xunit;
 
-namespace MyPlanner.Domain.UnitTests.Planners.TestData
+namespace MyPlanner.Domain.TestData.Planners.TheoryData
 {
     public class InvalidTodoCreateArgumentsData : TheoryData<TodoId, TodoTitle, Type>
     {

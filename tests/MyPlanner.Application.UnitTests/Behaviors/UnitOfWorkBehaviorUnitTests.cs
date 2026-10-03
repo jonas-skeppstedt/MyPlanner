@@ -2,7 +2,7 @@
 using Moq;
 using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Behaviors;
-using MyPlanner.Application.UnitTests.TestData;
+using MyPlanner.Application.TestData.Behaviors;
 using MyPlanner.Domain.Common;
 using MyPlanner.Domain.Planners.Errors;
 

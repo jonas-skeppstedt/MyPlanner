@@ -1,7 +1,7 @@
 ﻿using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.ValueObjects;
 
-namespace MyPlanner.Application.UnitTests.TestData
+namespace MyPlanner.Domain.TestData.Planners.Builders
 {
     public class TodoBuilder
     {

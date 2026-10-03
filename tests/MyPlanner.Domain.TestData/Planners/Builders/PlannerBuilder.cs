@@ -2,7 +2,7 @@
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
 
-namespace MyPlanner.Application.UnitTests.TestData
+namespace MyPlanner.Domain.TestData.Planners.Builders
 {
     public class PlannerBuilder
     {

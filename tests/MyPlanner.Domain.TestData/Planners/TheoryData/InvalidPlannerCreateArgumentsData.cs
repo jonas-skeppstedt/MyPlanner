@@ -1,8 +1,9 @@
 ﻿using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
+using Xunit;
 
-namespace MyPlanner.Domain.UnitTests.Planners.TestData
+namespace MyPlanner.Domain.TestData.Planners.TheoryData
 {
     public class InvalidPlannerCreateArgumentsData : TheoryData<PlannerId, UserId, PlannerTitle, Type>
     {
