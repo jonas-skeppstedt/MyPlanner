@@ -1,0 +1,75 @@
+﻿@page "/planners/{RawId:guid}"
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Authorization
+@using MyPlanner.Application.Abstractions.Messaging
+@using MyPlanner.Application.Features.Planners.Commands.AddTodo
+@using MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails
+@using MyPlanner.Domain.Planners
+@using MyPlanner.Web.Components.Features.Planners.Extensions
+@using MyPlanner.Web.Components.Features.Planners.Models
+
+@inject IScopedSender _sender
+
+<PageTitle>Planner details</PageTitle>
+
+<h3>Planner details</h3>
+
+@if (Planner == null)
+{
+    <p>Loading planner...</p>
+}
+else
+{
+    <div>
+        <p>PlannerId: @Planner.Id</p>
+        <p>OwnerId: @Planner.OwnerId</p>
+        <p>Title: @Planner.Title</p>
+        <button @onclick="OnAddTodoClicked">Add dummy todo</button>
+
+        @foreach (var todo in Planner.Todos)
+        {
+            <div>
+                <p>TodoId: @todo.Id</p>
+                <p>Title: @todo.Title</p>
+                <p>Description: @todo.Description</p>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid RawId { get; set; }
+
+    private PlannerDetailsModel? Planner { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var result = await _sender.Query(new GetPlannerDetailsQuery(new PlannerId(RawId)));
+
+        if (result.IsSuccess)
+        {
+            Planner = result.Value.ToUiModel();
+        }
+    }
+
+    public async Task OnAddTodoClicked()
+    {
+        if (Planner == null)
+        {
+            return;
+        }
+
+        var command = new AddTodoCommand(Planner.Id, "Dummy todo");
+
+        var result = await _sender.Command(command);
+
+        if (result.IsSuccess)
+        {
+            var response = result.Value;
+            Planner.Todos.Add(new TodoDetailsModel(response.TodoId, response.Title, response.Description));
+        }
+    }
+}
