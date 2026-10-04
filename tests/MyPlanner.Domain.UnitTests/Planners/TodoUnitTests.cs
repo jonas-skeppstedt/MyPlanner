@@ -7,34 +7,34 @@ namespace MyPlanner.Domain.UnitTests.Planners
     public class TodoUnitTests
     {
         [Theory]
-        [ClassData(typeof(InvalidTodoCreateArgumentsData))]
-        public void Create_ShouldThrowExpectedException_WhenAnyInputIsInvalid(
+        [ClassData(typeof(InvalidTodoFromArgumentsData))]
+        public void From_ShouldThrowExpectedException_WhenAnyInputIsInvalid(
             TodoId id,
             TodoTitle title,
             Type expectedExceptionType)
         {
             // Act
-            Action act = () => Todo.Create(id, title);
+            Action act = () => Todo.From(id, title);
 
             // Assert
             Assert.Throws(expectedExceptionType, act);
         }
 
         [Fact]
-        public void Create_ShouldReturnSuccessResult_WhenInputsAreValid()
+        public void From_ShouldReturnTodo_WhenInputsAreValid()
         {
             // Arrange
             var expectedTodoId = new TodoId(Guid.NewGuid());
             var expectedTodoTitle = TodoTitle.Create("Valid title").Value;
 
             // Act
-            var result = Todo.Create(expectedTodoId, expectedTodoTitle);
+            var todo = Todo.From(expectedTodoId, expectedTodoTitle);
 
             // Assert
-            Assert.True(result.IsSuccess);
-            Assert.Equal(expectedTodoId, result.Value.Id);
-            Assert.Equal(expectedTodoTitle, result.Value.Title);
-            Assert.Equal(TodoDescription.Empty, result.Value.Description);
+            Assert.NotNull(todo);
+            Assert.Equal(expectedTodoId, todo.Id);
+            Assert.Equal(expectedTodoTitle, todo.Title);
+            Assert.Equal(TodoDescription.Empty, todo.Description);
         }
     }
 }

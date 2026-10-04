@@ -1,5 +1,4 @@
-﻿using MyPlanner.Domain.Common;
-using MyPlanner.Domain.Planners.ValueObjects;
+﻿using MyPlanner.Domain.Planners.ValueObjects;
 
 namespace MyPlanner.Domain.Planners
 {
@@ -23,12 +22,12 @@ namespace MyPlanner.Domain.Planners
             Title = default!;
         }
 
-        public static Result<Todo> Create(TodoId id, TodoTitle title)
+        public static Todo From(TodoId id, TodoTitle title)
         {
             id.ThrowIfEmpty(nameof(id));
             ArgumentNullException.ThrowIfNull(title);
 
-            return Result<Todo>.Success(new Todo(id, title));
+            return new Todo(id, title);
         }
     }
 }

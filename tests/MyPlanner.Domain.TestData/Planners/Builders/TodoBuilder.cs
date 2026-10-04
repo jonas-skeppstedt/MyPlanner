@@ -22,7 +22,7 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
 
         public Todo Build()
         {
-            return Todo.Create(_id, _title).Value;
+            return Todo.From(_id, _title);
         }
     }
 }

@@ -30,13 +30,13 @@ namespace MyPlanner.Domain.Planners
             Title = default!;
         }
 
-        public static Result<Planner> Create(PlannerId id, UserId ownerId, PlannerTitle title)
+        public static Planner From(PlannerId id, UserId ownerId, PlannerTitle title)
         {
             id.ThrowIfEmpty(nameof(id));
             ownerId.ThrowIfEmpty(nameof(ownerId));
             ArgumentNullException.ThrowIfNull(title);
 
-            return Result<Planner>.Success(new Planner(id, ownerId, title));
+            return new Planner(id, ownerId, title);
         }
 
         public Result AddTodo(Todo todo)

@@ -4,9 +4,9 @@ using Xunit;
 
 namespace MyPlanner.Domain.TestData.Planners.TheoryData
 {
-    public class InvalidTodoCreateArgumentsData : TheoryData<TodoId, TodoTitle, Type>
+    public class InvalidTodoFromArgumentsData : TheoryData<TodoId, TodoTitle, Type>
     {
-        public InvalidTodoCreateArgumentsData()
+        public InvalidTodoFromArgumentsData()
         {
             var validId = new TodoId(Guid.NewGuid());
             var validTitle = TodoTitle.Create("Valid title").Value;

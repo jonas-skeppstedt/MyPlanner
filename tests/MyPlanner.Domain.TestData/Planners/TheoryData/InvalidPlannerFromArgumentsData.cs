@@ -5,9 +5,9 @@ using Xunit;
 
 namespace MyPlanner.Domain.TestData.Planners.TheoryData
 {
-    public class InvalidPlannerCreateArgumentsData : TheoryData<PlannerId, UserId, PlannerTitle, Type>
+    public class InvalidPlannerFromArgumentsData : TheoryData<PlannerId, UserId, PlannerTitle, Type>
     {
-        public InvalidPlannerCreateArgumentsData()
+        public InvalidPlannerFromArgumentsData()
         {
             var validId = PlannerId.New();
             var validUserId = new UserId(Guid.NewGuid());
