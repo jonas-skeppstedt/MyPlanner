@@ -25,7 +25,7 @@
         {
             if (Value == Guid.Empty)
             {
-                throw new ArgumentException("UserId cannot be empty.", nameof(paramName));
+                throw new ArgumentException("UserId cannot be empty.", paramName);
             }
         }
 

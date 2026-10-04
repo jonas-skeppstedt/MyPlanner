@@ -13,20 +13,12 @@ namespace MyPlanner.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IReadOnlyList<Planner>> GetAllAsync(UserId userId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Planners
-                .Include(p => p.Todos)
-                .Where(p => p.OwnerId == userId)
-                .ToListAsync(cancellationToken);
-        }
-
         public async Task<Planner?> GetByIdAsync(PlannerId id, UserId userId, CancellationToken cancellationToken = default)
         {
             return await _context.Planners
                 .Include(p => p.Todos)
                 .Where(p => p.Id == id && p.OwnerId == userId)
-                .FirstOrDefaultAsync(cancellationToken);
+                .SingleOrDefaultAsync(cancellationToken);
         }
 
         public void Add(Planner planner)
