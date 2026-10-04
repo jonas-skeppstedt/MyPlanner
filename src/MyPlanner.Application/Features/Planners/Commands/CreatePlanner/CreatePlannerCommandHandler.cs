@@ -28,17 +28,10 @@ namespace MyPlanner.Application.Features.Planners.Commands.CreatePlanner
                 return plannerTitleResult.Error;
             }
 
-            var plannerCreateResult = Planner.Create(
+            var planner = Planner.From(
                 PlannerId.New(),
                 _userContext.UserId,
                 plannerTitleResult.Value);
-
-            if (plannerCreateResult.IsFailure)
-            {
-                return plannerCreateResult.Error;
-            }
-
-            var planner = plannerCreateResult.Value;
 
             _plannerRepository.Add(planner);
 

@@ -27,12 +27,7 @@ namespace MyPlanner.Application.Features.Planners.Commands.AddTodo
                 return todoTitleResult.Error;
             }
 
-            var todoCreateResult = Todo.Create(TodoId.New(), todoTitleResult.Value);
-
-            if (todoCreateResult.IsFailure)
-            {
-                return todoCreateResult.Error;
-            }
+            var todo = Todo.From(TodoId.New(), todoTitleResult.Value);
 
             var planner = await _plannerRepository.GetByIdAsync(
                 command.PlannerId,
@@ -43,8 +38,6 @@ namespace MyPlanner.Application.Features.Planners.Commands.AddTodo
             {
                 return PlannerErrors.NotFound;
             }
-
-            var todo = todoCreateResult.Value;
 
             var addTodoResult = planner.AddTodo(todo);
 

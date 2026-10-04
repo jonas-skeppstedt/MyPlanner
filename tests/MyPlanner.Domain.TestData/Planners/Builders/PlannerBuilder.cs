@@ -37,7 +37,7 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
 
         public Planner Build()
         {
-            var planner = Planner.Create(_id, _ownerId, _title).Value;
+            var planner = Planner.From(_id, _ownerId, _title);
 
             foreach (var todo in _todos)
             {
