@@ -4,5 +4,6 @@ using MyPlanner.Application.Features.Planners.Queries.Dtos;
 
 namespace MyPlanner.Application.Features.Planners.Queries.GetPlannerOverviews
 {
-    public sealed record GetPlannerOverviewsQuery : IQuery<IReadOnlyList<PlannerOverviewDto>>, IRequireAuthentication;
+    public sealed record GetPlannerOverviewsQuery
+        : IQuery<IReadOnlyList<PlannerOverviewDto>>, IRequireAuthentication;
 }
