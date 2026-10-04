@@ -20,7 +20,7 @@
 @foreach (var planner in _plannerOverviewModels)
 {
     <div>
-        <p>@planner.Id, @planner.Title</p>
+        <a href="/planners/@planner.Id"><p>@planner.Id, @planner.Title</p></a>
     </div>
 }
 
