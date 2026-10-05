@@ -48,10 +48,6 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
             // Arrange
             var command = new ChangePlannerTitleCommand(PlannerId.New(), "New title");
 
-            _userContextMock
-                .Setup(x => x.UserId)
-                .Returns(new UserId(Guid.NewGuid()));
-
             _plannerRepositoryMock
                 .Setup(x => x.GetByIdAsync(
                     It.IsAny<PlannerId>(),

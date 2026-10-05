@@ -23,14 +23,13 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.CreatePlann
         {
             // Arrange
             var invalidCommand = new CreatePlannerCommand(string.Empty);
-            var expectedError = PlannerTitleErrors.TitleRequired;
 
             // Act
             var result = await _sut.Handle(invalidCommand, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
-            Assert.Equal(expectedError, result.Error);
+            Assert.Equal(PlannerTitleErrors.TitleRequired, result.Error);
         }
 
         [Fact]
