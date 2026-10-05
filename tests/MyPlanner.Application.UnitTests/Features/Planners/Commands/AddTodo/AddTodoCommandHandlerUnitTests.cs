@@ -21,27 +21,6 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
-        {
-            // Arrange
-            var command = new AddTodoCommand(PlannerId.New(), "Valid title");
-
-            _plannerRepositoryMock
-                .Setup(x => x.GetByIdAsync(
-                    It.IsAny<PlannerId>(),
-                    It.IsAny<UserId>(),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Planner?)null);
-
-            // Act
-            var result = await _sut.Handle(command, CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailure);
-            Assert.Equal(PlannerErrors.NotFound, result.Error);
-        }
-
-        [Fact]
         public async Task Handle_ShouldReturnFailureResult_WhenTodoTitleValidationFails()
         {
             // Arrange
@@ -61,6 +40,27 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
                     It.IsAny<UserId>(),
                     It.IsAny<CancellationToken>()),
                     Times.Never);
+        }
+
+        [Fact]
+        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        {
+            // Arrange
+            var command = new AddTodoCommand(PlannerId.New(), "Valid title");
+
+            _plannerRepositoryMock
+                .Setup(x => x.GetByIdAsync(
+                    It.IsAny<PlannerId>(),
+                    It.IsAny<UserId>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Planner?)null);
+
+            // Act
+            var result = await _sut.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.NotFound, result.Error);
         }
 
         [Fact]
