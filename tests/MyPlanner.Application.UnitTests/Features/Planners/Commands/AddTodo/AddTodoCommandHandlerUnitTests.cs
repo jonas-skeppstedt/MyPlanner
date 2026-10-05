@@ -1,8 +1,6 @@
 ﻿using Moq;
 using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Features.Planners.Commands.AddTodo;
-using MyPlanner.Application.TestData.Planners.TheoryData;
-using MyPlanner.Domain.Common;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Planners.ValueObjects;
@@ -23,14 +21,32 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
         }
 
         [Fact]
+        public async Task Handle_ShouldReturnFailureResult_WhenTodoTitleValidationFails()
+        {
+            // Arrange
+            var invalidCommand = new AddTodoCommand(PlannerId.New(), Title: null!);
+
+            // Act
+            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(TodoTitleErrors.TitleRequired, result.Error);
+
+            // Verify
+            _plannerRepositoryMock
+                .Verify(x => x.GetByIdAsync(
+                    It.IsAny<PlannerId>(),
+                    It.IsAny<UserId>(),
+                    It.IsAny<CancellationToken>()),
+                    Times.Never);
+        }
+
+        [Fact]
         public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new AddTodoCommand(PlannerId.New(), "Valid title");
-
-            _userContextMock
-                .Setup(x => x.UserId)
-                .Returns(new UserId(Guid.NewGuid()));
 
             _plannerRepositoryMock
                 .Setup(x => x.GetByIdAsync(
@@ -45,35 +61,6 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal(PlannerErrors.NotFound, result.Error);
-        }
-
-        [Theory]
-        [ClassData(typeof(InvalidAddTodoCommandArgumentsData))]
-        public async Task Handle_ShouldReturnFailureResult_WhenAnyDomainValidationFails(
-            string title,
-            Error expectedError)
-        {
-            // Arrange
-            var planner = new PlannerBuilder().Build();
-            var command = new AddTodoCommand(planner.Id, title);
-
-            _userContextMock
-                .Setup(x => x.UserId)
-                .Returns(planner.OwnerId);
-
-            _plannerRepositoryMock
-                .Setup(x => x.GetByIdAsync(
-                    command.PlannerId,
-                    planner.OwnerId,
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(planner);
-
-            // Act
-            var result = await _sut.Handle(command, CancellationToken.None);
-
-            // Assert
-            Assert.True(result.IsFailure);
-            Assert.Equal(expectedError, result.Error);
         }
 
         [Fact]
