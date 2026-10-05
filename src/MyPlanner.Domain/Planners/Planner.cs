@@ -39,6 +39,11 @@ namespace MyPlanner.Domain.Planners
             return new Planner(id, ownerId, title);
         }
 
+        public Result Delete(UserId requestedBy)
+        {
+            throw new NotImplementedException();
+        }
+
         public Result AddTodo(Todo todo)
         {
             ArgumentNullException.ThrowIfNull(todo);

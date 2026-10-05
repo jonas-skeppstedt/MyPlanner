@@ -84,5 +84,23 @@ namespace MyPlanner.Domain.UnitTests.Planners
             Assert.True(result.IsSuccess);
             Assert.Single(planner.Todos, t => t == todo);
         }
+
+        [Fact]
+        public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnFailureResult_WhenRequestedByUserIdIsNotOwnerId()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnSuccessResult_WhenRequestedByUserIdIsOwnerId()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
