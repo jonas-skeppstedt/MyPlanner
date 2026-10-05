@@ -53,6 +53,14 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
             // Assert
             Assert.True(result.IsFailure);
             Assert.Equal(TodoTitleErrors.TitleRequired, result.Error);
+
+            // Verify
+            _plannerRepositoryMock
+                .Verify(x => x.GetByIdAsync(
+                    It.IsAny<PlannerId>(),
+                    It.IsAny<UserId>(),
+                    It.IsAny<CancellationToken>()),
+                    Times.Never);
         }
 
         [Fact]
