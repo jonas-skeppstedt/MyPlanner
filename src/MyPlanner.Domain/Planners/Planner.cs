@@ -39,6 +39,20 @@ namespace MyPlanner.Domain.Planners
             return new Planner(id, ownerId, title);
         }
 
+        public Result ChangeTitle(PlannerTitle newTitle)
+        {
+            ArgumentNullException.ThrowIfNull(newTitle);
+
+            if (newTitle == Title)
+            {
+                return Result.NoOp();
+            }
+
+            Title = newTitle;
+
+            return Result.Success();
+        }
+
         public Result AddTodo(Todo todo)
         {
             ArgumentNullException.ThrowIfNull(todo);
