@@ -41,7 +41,14 @@ namespace MyPlanner.Domain.Planners
 
         public Result Delete(UserId requestedBy)
         {
-            throw new NotImplementedException();
+            requestedBy.ThrowIfEmpty(nameof(requestedBy));
+
+            if (requestedBy != OwnerId)
+            {
+                return PlannerErrors.OnlyOwnerCanDelete;
+            }
+
+            return Result.Success();
         }
 
         public Result AddTodo(Todo todo)

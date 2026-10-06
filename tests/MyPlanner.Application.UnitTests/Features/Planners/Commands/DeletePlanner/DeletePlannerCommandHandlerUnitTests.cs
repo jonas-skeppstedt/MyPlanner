@@ -2,6 +2,9 @@
 using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Features.Planners.Commands.DeletePlanner;
 using MyPlanner.Domain.Planners;
+using MyPlanner.Domain.Planners.Errors;
+using MyPlanner.Domain.Shared;
+using MyPlanner.Domain.TestData.Planners.Builders;
 
 namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.DeletePlanner
 {
@@ -19,19 +22,87 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.DeletePlann
         [Fact]
         public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
         {
-            throw new NotImplementedException();
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            var command = new DeletePlannerCommand(new PlannerId(Guid.NewGuid()));
+
+            _userContextMock
+                .Setup(x => x.UserId)
+                .Returns(new UserId(Guid.NewGuid()));
+
+            _plannerRepositoryMock
+                .Setup(x => x.GetByIdAsync(
+                    command.PlannerId,
+                    planner.OwnerId,
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Planner?)null);
+
+            // Act
+            var result = await _sut.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.NotFound, result.Error);
         }
 
         [Fact]
         public async Task Handle_ShouldReturnFailureResult_WhenUserIsNotOwner()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var plannerId = new PlannerId(Guid.NewGuid());
+            var userId = new UserId(Guid.NewGuid());
+
+            var command = new DeletePlannerCommand(plannerId);
+
+            _userContextMock
+                .Setup(x => x.UserId)
+                .Returns(userId);
+
+            _plannerRepositoryMock
+                .Setup(x => x.GetByIdAsync(
+                    plannerId,
+                    userId,
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync((Planner?)null);
+
+            //Act
+            var result = await _sut.Handle(command, CancellationToken.None);
+
+            //Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.NotFound, result.Error);
+
         }
 
         [Fact]
         public async Task Handle_ShouldReturnSuccessResult_WhenDeleteIsSuccessful()
         {
-            throw new NotImplementedException();
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            var command = new DeletePlannerCommand(planner.Id);
+
+            _userContextMock
+                .Setup(x => x.UserId)
+                .Returns(planner.OwnerId);
+
+            _plannerRepositoryMock
+                .Setup(x => x.GetByIdAsync(
+                    command.PlannerId,
+                    planner.OwnerId,
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(planner);
+
+            // Act
+            var result = await _sut.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+
+            //Verify
+            _plannerRepositoryMock.Verify(
+                x => x.Remove(planner), Times.Once());
         }
     }
 }

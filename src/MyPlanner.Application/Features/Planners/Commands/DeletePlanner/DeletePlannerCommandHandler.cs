@@ -2,6 +2,7 @@
 using MyPlanner.Application.Abstractions.Messaging;
 using MyPlanner.Domain.Common;
 using MyPlanner.Domain.Planners;
+using MyPlanner.Domain.Planners.Errors;
 
 namespace MyPlanner.Application.Features.Planners.Commands.DeletePlanner
 {
@@ -16,9 +17,28 @@ namespace MyPlanner.Application.Features.Planners.Commands.DeletePlanner
             _userContext = userContext;
         }
 
-        public Task<Result> Handle(DeletePlannerCommand command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(DeletePlannerCommand command, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var planner = await _plannerRepository.GetByIdAsync(
+                command.PlannerId,
+                _userContext.UserId,
+                cancellationToken);
+
+            if (planner == null)
+            {
+                return PlannerErrors.NotFound;
+            }
+
+            var removePlannerResult = planner.Delete(_userContext.UserId);
+
+            if (removePlannerResult.IsFailure)
+            {
+                return removePlannerResult.Error;
+            }
+
+            _plannerRepository.Remove(planner);
+
+            return Result.Success();
         }
     }
 }

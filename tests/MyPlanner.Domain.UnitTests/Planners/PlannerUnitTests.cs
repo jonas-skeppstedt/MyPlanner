@@ -88,19 +88,40 @@ namespace MyPlanner.Domain.UnitTests.Planners
         [Fact]
         public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var userId = new UserId(Guid.Empty);
+            var planner = new PlannerBuilder().Build();
+
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.Delete(userId));
         }
 
         [Fact]
         public void Delete_ShouldReturnFailureResult_WhenRequestedByUserIdIsNotOwnerId()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var planner = new PlannerBuilder().WithOwnerId(new UserId(Guid.NewGuid())).Build();
+            var notOwnerId = new UserId(Guid.NewGuid());
+
+            //Act
+            var result = planner.Delete(notOwnerId);
+
+            //Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.OnlyOwnerCanDelete, result.Error);
         }
 
         [Fact]
         public void Delete_ShouldReturnSuccessResult_WhenRequestedByUserIdIsOwnerId()
         {
-            throw new NotImplementedException();
+            //Arrange
+            var planner = new PlannerBuilder().WithOwnerId(new UserId(Guid.NewGuid())).Build();
+
+            //Act
+            var result = planner.Delete(planner.OwnerId);
+
+            //Assert
+            Assert.True(result.IsSuccess);
         }
     }
 }
