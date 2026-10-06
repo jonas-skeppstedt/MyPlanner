@@ -53,6 +53,18 @@ namespace MyPlanner.Domain.Planners
             return Result.Success();
         }
 
+        public Result Delete(UserId requestedBy)
+        {
+            requestedBy.ThrowIfEmpty(nameof(requestedBy));
+
+            if (requestedBy != OwnerId)
+            {
+                return PlannerErrors.OnlyOwnerCanDelete;
+            }
+
+            return Result.Success();
+        }
+
         public Result AddTodo(Todo todo)
         {
             ArgumentNullException.ThrowIfNull(todo);

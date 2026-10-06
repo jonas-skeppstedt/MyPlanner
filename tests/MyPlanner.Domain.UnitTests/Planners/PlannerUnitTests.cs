@@ -178,5 +178,49 @@ namespace MyPlanner.Domain.UnitTests.Planners
             Assert.True(result.IsSuccess);
             Assert.Equal(newTitle, planner.Title);
         }
+
+        [Fact]
+        public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
+        {
+            //Arrange
+            var planner = new PlannerBuilder().Build();
+
+            //Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.Delete(default));
+
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnFailureResult_WhenRequestedByUserIdIsNotOwnerId()
+        {
+            //Arrange
+            var planner = new PlannerBuilder()
+                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .Build();
+
+            var notOwnerId = new UserId(Guid.NewGuid());
+
+            //Act
+            var result = planner.Delete(notOwnerId);
+
+            //Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(PlannerErrors.OnlyOwnerCanDelete, result.Error);
+        }
+
+        [Fact]
+        public void Delete_ShouldReturnSuccessResult_WhenRequestedByUserIdIsOwnerId()
+        {
+            //Arrange
+            var planner = new PlannerBuilder()
+                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .Build();
+
+            //Act
+            var result = planner.Delete(planner.OwnerId);
+
+            //Assert
+            Assert.True(result.IsSuccess);
+        }
     }
 }
