@@ -222,5 +222,54 @@ namespace MyPlanner.Domain.UnitTests.Planners
             //Assert
             Assert.True(result.IsSuccess);
         }
+
+        [Fact]
+        public void ChangeTodoTitle_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+            var newTitle = TodoTitle.Create("Valid title").Value;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.ChangeTodoTitle(default, newTitle));
+        }
+
+        [Fact]
+        public void ChangeTodoTitle_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+            var newTitle = TodoTitle.Create("New title").Value;
+
+            // Act
+            var result = planner.ChangeTodoTitle(TodoId.New(), newTitle);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(TodoErrors.NotFound, result.Error);
+        }
+
+        [Fact]
+        public void ChangeTodoTitle_ShouldReturnSuccessResult_WhenInputsAreValid()
+        {
+            // Arrange
+            var initialTitle = TodoTitle.Create("Initial title").Value;
+
+            var todo = new TodoBuilder()
+                .WithTodoTitle(initialTitle)
+                .Build();
+
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            var newTitle = TodoTitle.Create("New title").Value;
+
+            // Act
+            var result = planner.ChangeTodoTitle(todo.Id, newTitle);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+        }
     }
 }
