@@ -86,6 +86,51 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
+        public void RemoveTodo_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.RemoveTodo(default));
+        }
+
+        [Fact]
+        public void RemoveTodo_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            // Act
+            var result = planner.RemoveTodo(TodoId.New());
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(TodoErrors.NotFound, result.Error);
+            Assert.Single(planner.Todos, t => t == todo);
+        }
+
+        [Fact]
+        public void RemoveTodo_ShouldReturnSuccessResult_WhenTodoExists()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            // Act
+            var result = planner.RemoveTodo(todo.Id);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Empty(planner.Todos);
+        }
+
+        [Fact]
         public void ChangeTitle_ShouldThrowExpectedException_WhenNewTitleIsNull()
         {
             // Arrange
