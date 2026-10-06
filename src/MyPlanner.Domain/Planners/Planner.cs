@@ -66,5 +66,21 @@ namespace MyPlanner.Domain.Planners
 
             return Result.Success();
         }
+
+        public Result RemoveTodo(TodoId id)
+        {
+            id.ThrowIfEmpty(nameof(id));
+
+            var todo = _todos.FirstOrDefault(t => t.Id == id);
+
+            if (todo == null)
+            {
+                return TodoErrors.NotFound;
+            }
+
+            _todos.Remove(todo);
+
+            return Result.Success();
+        }
     }
 }
