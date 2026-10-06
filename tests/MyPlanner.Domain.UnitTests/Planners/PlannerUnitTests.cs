@@ -86,6 +86,100 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
+        public void RemoveTodo_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.RemoveTodo(default));
+        }
+
+        [Fact]
+        public void RemoveTodo_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            // Act
+            var result = planner.RemoveTodo(TodoId.New());
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(TodoErrors.NotFound, result.Error);
+            Assert.Single(planner.Todos, t => t == todo);
+        }
+
+        [Fact]
+        public void RemoveTodo_ShouldReturnSuccessResult_WhenTodoExists()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            // Act
+            var result = planner.RemoveTodo(todo.Id);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Empty(planner.Todos);
+        }
+
+        [Fact]
+        public void ChangeTitle_ShouldThrowExpectedException_WhenNewTitleIsNull()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => planner.ChangeTitle(null!));
+        }
+
+        [Fact]
+        public void ChangeTitle_ShouldReturnNoOpResult_WhenNewTitleIsIdentical()
+        {
+            // Arrange
+            var identicalTitle = "Identical title";
+            var initialTitle = PlannerTitle.Create(identicalTitle).Value;
+            var newTitle = PlannerTitle.Create(identicalTitle).Value;
+
+            var planner = new PlannerBuilder()
+                .WithPlannerTitle(initialTitle)
+                .Build();
+
+            // Act
+            var result = planner.ChangeTitle(newTitle);
+
+            // Assert
+            Assert.True(result.IsNoOp);
+            Assert.Equal(initialTitle, planner.Title);
+        }
+
+        [Fact]
+        public void ChangeTitle_ShouldReturnSuccessResult_WhenInputIsValidNewTitle()
+        {
+            // Arrange
+            var initialTitle = PlannerTitle.Create("Initial title").Value;
+            var newTitle = PlannerTitle.Create("New title").Value;
+
+            var planner = new PlannerBuilder()
+                .WithPlannerTitle(initialTitle)
+                .Build();
+
+            // Act
+            var result = planner.ChangeTitle(newTitle);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(newTitle, planner.Title);
+        }
+
+        [Fact]
         public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
         {
             //Arrange

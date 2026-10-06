@@ -39,6 +39,20 @@ namespace MyPlanner.Domain.Planners
             return new Planner(id, ownerId, title);
         }
 
+        public Result ChangeTitle(PlannerTitle newTitle)
+        {
+            ArgumentNullException.ThrowIfNull(newTitle);
+
+            if (newTitle == Title)
+            {
+                return Result.NoOp();
+            }
+
+            Title = newTitle;
+
+            return Result.Success();
+        }
+
         public Result Delete(UserId requestedBy)
         {
             requestedBy.ThrowIfEmpty(nameof(requestedBy));
@@ -61,6 +75,22 @@ namespace MyPlanner.Domain.Planners
             }
 
             _todos.Add(todo);
+
+            return Result.Success();
+        }
+
+        public Result RemoveTodo(TodoId id)
+        {
+            id.ThrowIfEmpty(nameof(id));
+
+            var todo = _todos.FirstOrDefault(t => t.Id == id);
+
+            if (todo == null)
+            {
+                return TodoErrors.NotFound;
+            }
+
+            _todos.Remove(todo);
 
             return Result.Success();
         }
