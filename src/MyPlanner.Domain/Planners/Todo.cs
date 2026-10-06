@@ -1,4 +1,5 @@
-﻿using MyPlanner.Domain.Planners.ValueObjects;
+﻿using MyPlanner.Domain.Common;
+using MyPlanner.Domain.Planners.ValueObjects;
 
 namespace MyPlanner.Domain.Planners
 {
@@ -28,6 +29,20 @@ namespace MyPlanner.Domain.Planners
             ArgumentNullException.ThrowIfNull(title);
 
             return new Todo(id, title);
+        }
+
+        internal Result ChangeTitle(TodoTitle newTitle)
+        {
+            ArgumentNullException.ThrowIfNull(newTitle);
+
+            if (newTitle == Title)
+            {
+                return Result.NoOp();
+            }
+
+            Title = newTitle;
+
+            return Result.Success();
         }
     }
 }
