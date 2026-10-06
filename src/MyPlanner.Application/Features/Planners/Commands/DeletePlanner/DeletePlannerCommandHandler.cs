@@ -29,11 +29,11 @@ namespace MyPlanner.Application.Features.Planners.Commands.DeletePlanner
                 return PlannerErrors.NotFound;
             }
 
-            var removePlannerResult = planner.Delete(_userContext.UserId);
+            var deletePlannerResult = planner.Delete(_userContext.UserId);
 
-            if (removePlannerResult.IsFailure)
+            if (deletePlannerResult.IsFailure)
             {
-                return removePlannerResult.Error;
+                return deletePlannerResult.Error;
             }
 
             _plannerRepository.Remove(planner);

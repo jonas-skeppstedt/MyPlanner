@@ -183,18 +183,21 @@ namespace MyPlanner.Domain.UnitTests.Planners
         public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
         {
             //Arrange
-            var userId = new UserId(Guid.Empty);
             var planner = new PlannerBuilder().Build();
 
             //Act & Assert
-            Assert.Throws<ArgumentException>(() => planner.Delete(userId));
+            Assert.Throws<ArgumentException>(() => planner.Delete(default));
+
         }
 
         [Fact]
         public void Delete_ShouldReturnFailureResult_WhenRequestedByUserIdIsNotOwnerId()
         {
             //Arrange
-            var planner = new PlannerBuilder().WithOwnerId(new UserId(Guid.NewGuid())).Build();
+            var planner = new PlannerBuilder()
+                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .Build();
+
             var notOwnerId = new UserId(Guid.NewGuid());
 
             //Act
@@ -209,7 +212,9 @@ namespace MyPlanner.Domain.UnitTests.Planners
         public void Delete_ShouldReturnSuccessResult_WhenRequestedByUserIdIsOwnerId()
         {
             //Arrange
-            var planner = new PlannerBuilder().WithOwnerId(new UserId(Guid.NewGuid())).Build();
+            var planner = new PlannerBuilder()
+                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .Build();
 
             //Act
             var result = planner.Delete(planner.OwnerId);
