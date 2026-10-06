@@ -94,5 +94,24 @@ namespace MyPlanner.Domain.Planners
 
             return Result.Success();
         }
+
+        public Result ChangeTodoTitle(TodoId id, TodoTitle newTitle)
+        {
+            return ExecuteOnTodo(id, todo => todo.ChangeTitle(newTitle));
+        }
+
+        private Result ExecuteOnTodo(TodoId id, Func<Todo, Result> action)
+        {
+            id.ThrowIfEmpty(nameof(id));
+
+            var todo = _todos.FirstOrDefault(t => t.Id == id);
+
+            if (todo == null)
+            {
+                return TodoErrors.NotFound;
+            }
+
+            return action(todo);
+        }
     }
 }
