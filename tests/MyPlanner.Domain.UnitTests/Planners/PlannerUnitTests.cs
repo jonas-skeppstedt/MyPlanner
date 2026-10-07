@@ -271,5 +271,54 @@ namespace MyPlanner.Domain.UnitTests.Planners
             // Assert
             Assert.True(result.IsSuccess);
         }
+
+        [Fact]
+        public void ChangeTodoDescription_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+            var newDescription = TodoDescription.Create("New description").Value;
+
+            // Act & Assert
+            Assert.Throws<ArgumentException>(() => planner.ChangeTodoDescription(default, newDescription));
+        }
+
+        [Fact]
+        public void ChangeTodoDescription_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        {
+            // Arrange
+            var planner = new PlannerBuilder().Build();
+            var newDescription = TodoDescription.Create("New description").Value;
+
+            // Act
+            var result = planner.ChangeTodoDescription(TodoId.New(), newDescription);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(TodoErrors.NotFound, result.Error);
+        }
+
+        [Fact]
+        public void ChangeTodoDescription_ShouldReturnSuccessResult_WhenInputsAreValid()
+        {
+            // Arrange
+            var initialDescription = TodoDescription.Create("Initial description").Value;
+
+            var todo = new TodoBuilder()
+                .WithTodoDescription(initialDescription)
+                .Build();
+
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
+
+            var newDescription = TodoDescription.Create("New description").Value;
+
+            // Act
+            var result = planner.ChangeTodoDescription(todo.Id, newDescription);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+        }
     }
 }
