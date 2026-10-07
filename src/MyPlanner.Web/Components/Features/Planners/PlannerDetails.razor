@@ -13,8 +13,14 @@
 @inject IScopedSender _sender
 
 <PageTitle>Planner details</PageTitle>
-
 <h3>Planner details</h3>
+
+@if (_errorMessage != null)
+{
+    <div class="text-bg-danger">
+        @_errorMessage
+    </div>
+}
 
 @if (Planner == null)
 {
@@ -22,28 +28,103 @@
 }
 else
 {
-    <div>
-        <p>PlannerId: @Planner.Id</p>
-        <p>OwnerId: @Planner.OwnerId</p>
-        <p>Title: @Planner.Title</p>
-        <button @onclick="OnAddTodoClicked">Add dummy todo</button>
-
-        @foreach (var todo in Planner.Todos)
-        {
+    <div class="planner-page">
+        <div class="planner-page-header">
             <div>
-                <p>TodoId: @todo.Id</p>
-                <p>Title: @todo.Title</p>
-                <p>Description: @todo.Description</p>
+                <p class="planner-eyebrow">PLANNER</p>
+                <h3>@Planner.Title</h3>
             </div>
-        }
+
+            <button class="create-todo-btn" @onclick="OnCreateTodoClicked">
+                + New Todo
+            </button>
+        </div>
+
+        <div class="todo-section">
+            <div class="todo-section-header">
+                <h4>Todos</h4>
+                <span class="todo-count">@Planner.Todos.Count</span>
+            </div>
+
+            <div class="todo-list">
+                @foreach (var todo in Planner.Todos)
+                {
+                    <div class="todo-card">
+                        <div class="todo-content">
+                            <div class="todo-title">
+                                @todo.Title
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(todo.Description))
+                            {
+                                <div class="todo-description">
+                                    @todo.Description
+                                </div>
+                            }
+                        </div>
+                        <button class="todo-menu-btn">
+                            ...
+                        </button>
+
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 }
+@if (_isCreatingTodo)
+{
+    <div class="create-todo-card">
+        <div class="create-todo-header">
+            <div>
+                <p class="create-todo-eyebrow">NEW TODO</p>
+                <h4>Create a new todo</h4>
+            </div>
+
+            <button type="button"
+                    class="close-todo-btn"
+                    @onclick="() => _isCreatingTodo = false">
+                ×
+            </button>
+        </div>
+
+        <EditForm Model="@_todoCreateModel" OnValidSubmit="HandleCreateTodoSubmit">
+            <DataAnnotationsValidator />
+            <div class="todo-form-group">
+                <label for="Title">Title</label>
+                <InputText @bind-Value="_todoCreateModel.Title"
+                           id="Title"
+                           class="todo-input"
+                           placeholder="What needs to be done?" />
+            </div>
+            <ValidationSummary />
+
+            <div class="todo-form-actions">
+                <button type="button"
+                        class="cancel-todo-btn"
+                        @onclick="() => _isCreatingTodo = false">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="save-todo-btn">
+                    Create Todo
+                </button>
+            </div>
+        </EditForm>
+    </div>
+}
+
 
 @code {
     [Parameter]
     public Guid RawId { get; set; }
 
+    private string? _errorMessage;
+
     private PlannerDetailsModel? Planner { get; set; }
+
+    private bool _isCreatingTodo;
+    private TodoCreateModel _todoCreateModel = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -53,16 +134,28 @@ else
         {
             Planner = result.Value.ToUiModel();
         }
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+        }
     }
 
-    public async Task OnAddTodoClicked()
+    private void OnCreateTodoClicked()
+    {
+        _todoCreateModel = new();
+        _isCreatingTodo = true;
+        _errorMessage = null;
+    }
+
+    private async Task HandleCreateTodoSubmit()
     {
         if (Planner == null)
         {
             return;
         }
 
-        var command = new AddTodoCommand(Planner.Id, "Dummy todo");
+        var command = new AddTodoCommand(Planner!.Id, _todoCreateModel.Title);
 
         var result = await _sender.Command(command);
 
@@ -71,5 +164,12 @@ else
             var response = result.Value;
             Planner.Todos.Add(new TodoDetailsModel(response.TodoId, response.Title, response.Description));
         }
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+        }
+
+        _isCreatingTodo = false;
     }
 }

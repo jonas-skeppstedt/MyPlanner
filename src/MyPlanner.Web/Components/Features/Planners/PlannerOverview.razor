@@ -12,19 +12,135 @@
 @inject IScopedSender _sender
 
 <PageTitle>Planner overview</PageTitle>
-
 <h3>Planner overview</h3>
 
-<button @onclick="OnCreateClicked">Create dummy Planner</button>
-
-@foreach (var planner in _plannerOverviewModels)
+@if (_errorMessage != null)
 {
-    <div>
-        <a href="/planners/@planner.Id"><p>@planner.Id, @planner.Title</p></a>
+    <div class="text-bg-danger">
+        @_errorMessage
     </div>
 }
 
+<div class="planner-overview">
+    <div class="overview-header">
+        <div>
+            <p class="planner-eyebrow">WORKSPACE</p>
+            <h3>My Planners</h3>
+            <p class="overview-subtitle">
+                Manage your planners and keep your tasks organized.
+            </p>
+        </div>
+        @if (!_isCreatingPlanner)
+        {
+            <button class="create-todo-btn" @onclick="OnCreatePlannerClicked">
+                + New Planner
+            </button>
+        }
+    </div>
+
+    @if (_isCreatingPlanner)
+    {
+        <div class="create-planner-card">
+            <div class="create-todo-header">
+                <div>
+                    <p class="create-todo-eyebrow">NEW PLANNER</p>
+                    <h4>Create a new planner</h4>
+                </div>
+
+                <button type="button"
+                        class="close-todo-btn"
+                        @onclick="() => _isCreatingPlanner = false">
+                    ×
+                </button>
+            </div>
+            <EditForm Model="@_plannerCreateModel"
+                      OnValidSubmit="HandleCreatePlannerSubmit">
+                <DataAnnotationsValidator />
+                <div class="todo-form-group">
+                    <label for="Title">Title</label>
+
+                    <InputText @bind-Value="_plannerCreateModel.Title"
+                               id="Title"
+                               class="todo-input"
+                               placeholder="What is this planner for?" />
+                </div>
+                <ValidationSummary />
+                <div class="todo-form-actions">
+                    <button type="button"
+                            class="cancel-todo-btn"
+                            @onclick="() => _isCreatingPlanner = false">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="save-todo-btn">
+                        Create Planner
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    }
+
+    <div class="planner-overview-section">
+        <div class="todo-section-header">
+            <h4>Your planners</h4>
+            <span class="todo-count">
+                @_plannerOverviewModels.Count
+            </span>
+        </div>
+
+        @if (_plannerOverviewModels.Count == 0)
+        {
+            <div class="empty-planner-state">
+                <div class="empty-planner-icon">+</div>
+
+                <h4>No planners yet</h4>
+                <p>
+                    Create your first planner to get started.
+                </p>
+                @if (!_isCreatingPlanner)
+                {
+                    <button class="save-todo-btn"
+                            @onclick="OnCreatePlannerClicked">
+                        Create Planner
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="planner-grid">
+                @foreach (var planner in _plannerOverviewModels)
+                {
+                    <a class="planner-card"
+                       href="/planners/@planner.Id">
+
+                        <div class="planner-card-content">
+                            <div class="planner-card-info">
+                                <div class="planner-card-title">
+                                    @planner.Title
+                                </div>
+                                <div class="planner-card-subtitle">
+                                    Open planner
+                                </div>
+                            </div>
+
+                            <div class="planner-card-arrow">
+                                →
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
 @code {
+    private string? _errorMessage;
+
+    private bool _isCreatingPlanner;
+    private PlannerCreateModel _plannerCreateModel = new();
+
     private List<PlannerOverviewModel> _plannerOverviewModels = new();
 
     protected override async Task OnInitializedAsync()
@@ -36,11 +152,23 @@
             var uiModels = result.Value.Select(p => p.ToUiModel()).ToList();
             _plannerOverviewModels = uiModels;
         }
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+        }
     }
 
-    private async Task OnCreateClicked()
+    private void OnCreatePlannerClicked()
     {
-        var command = new CreatePlannerCommand("Dummy planner");
+        _plannerCreateModel = new();
+        _isCreatingPlanner = true;
+        _errorMessage = null;
+    }
+
+    private async Task HandleCreatePlannerSubmit()
+    {
+        var command = new CreatePlannerCommand(_plannerCreateModel.Title);
 
         var result = await _sender.Command(command);
 
@@ -49,5 +177,13 @@
             var uiModel = new PlannerOverviewModel(result.Value.PlannerId, result.Value.Title);
             _plannerOverviewModels.Add(uiModel);
         }
-    }
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+
+        }
+
+        _isCreatingPlanner = false;
+    } 
 }
