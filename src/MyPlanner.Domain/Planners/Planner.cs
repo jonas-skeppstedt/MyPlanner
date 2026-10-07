@@ -100,6 +100,11 @@ namespace MyPlanner.Domain.Planners
             return ExecuteOnTodo(id, todo => todo.ChangeTitle(newTitle));
         }
 
+        public Result ChangeTodoDescription(TodoId id, TodoDescription newDescription)
+        {
+            return ExecuteOnTodo(id, todo => todo.ChangeDescription(newDescription));
+        }
+
         private Result ExecuteOnTodo(TodoId id, Func<Todo, Result> action)
         {
             id.ThrowIfEmpty(nameof(id));
