@@ -86,5 +86,56 @@ namespace MyPlanner.Domain.UnitTests.Planners
             Assert.True(result.IsSuccess);
             Assert.Equal(newTitle, todo.Title);
         }
+
+        [Fact]
+        public void ChangeDescription_ShouldThrowExpectedException_WhenTodoDescriptionIsNull()
+        {
+            // Arrange
+            var todo = new TodoBuilder().Build();
+
+            // Act & Assert
+            Assert.Throws<ArgumentNullException>(() => todo.ChangeDescription(null!));
+        }
+
+        [Fact]
+        public void ChangeDescription_ShouldReturnNoOpResult_WhenNewDescriptionIsIdentical()
+        {
+            // Arrange
+            var identicalDescription = "Identical description";
+            var initialDescription = TodoDescription.Create(identicalDescription).Value;
+
+            var todo = new TodoBuilder()
+                .WithTodoDescription(initialDescription)
+                .Build();
+
+            var newDescription = TodoDescription.Create(identicalDescription).Value;
+
+            // Act
+            var result = todo.ChangeDescription(newDescription);
+
+            // Assert
+            Assert.True(result.IsNoOp);
+            Assert.Equal(initialDescription, todo.Description);
+        }
+
+        [Fact]
+        public void ChangeDescription_ShouldReturnSuccessResult_WhenInputIsValidNewDescription()
+        {
+            // Arrange
+            var initialDescription = TodoDescription.Create("Initial description").Value;
+
+            var todo = new TodoBuilder()
+                .WithTodoDescription(initialDescription)
+                .Build();
+
+            var newDescription = TodoDescription.Create("New description").Value;
+
+            // Act
+            var result = todo.ChangeDescription(newDescription);
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            Assert.Equal(newDescription, todo.Description);
+        }
     }
 }

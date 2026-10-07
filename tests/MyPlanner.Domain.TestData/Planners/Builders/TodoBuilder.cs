@@ -7,6 +7,7 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
     {
         private TodoId _id = TodoId.New();
         private TodoTitle _title = TodoTitle.Create("Todo title").Value;
+        private TodoDescription _description = TodoDescription.Empty;
 
         public TodoBuilder WithTodoId(TodoId id)
         {
@@ -20,9 +21,19 @@ namespace MyPlanner.Domain.TestData.Planners.Builders
             return this;
         }
 
+        public TodoBuilder WithTodoDescription(TodoDescription description)
+        {
+            _description = description;
+            return this;
+        }
+
         public Todo Build()
         {
-            return Todo.From(_id, _title);
+            var todo = Todo.From(_id, _title);
+
+            _ = todo.ChangeDescription(_description);
+
+            return todo;
         }
     }
 }

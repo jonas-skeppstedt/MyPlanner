@@ -8,6 +8,7 @@
 
   <ItemGroup>
 	  <InternalsVisibleTo Include="MyPlanner.Domain.UnitTests" />
+	  <InternalsVisibleTo Include="MyPlanner.Domain.TestData" />
   </ItemGroup>
 
 </Project>

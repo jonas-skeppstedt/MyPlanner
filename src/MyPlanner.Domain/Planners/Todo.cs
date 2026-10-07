@@ -44,5 +44,19 @@ namespace MyPlanner.Domain.Planners
 
             return Result.Success();
         }
+
+        internal Result ChangeDescription(TodoDescription newDescription)
+        {
+            ArgumentNullException.ThrowIfNull(newDescription);
+
+            if (newDescription == Description)
+            {
+                return Result.NoOp();
+            }
+
+            Description = newDescription;
+
+            return Result.Success();
+        }
     }
 }
