@@ -5,7 +5,9 @@
 @using Microsoft.AspNetCore.Authorization
 @using MyPlanner.Application.Abstractions.Messaging
 @using MyPlanner.Application.Features.Planners.Commands.CreatePlanner
+@using MyPlanner.Application.Features.Planners.Commands.DeletePlanner
 @using MyPlanner.Application.Features.Planners.Queries.GetPlannerOverviews
+@using MyPlanner.Domain.Planners
 @using MyPlanner.Web.Components.Features.Planners.Extensions
 @using MyPlanner.Web.Components.Features.Planners.Models
 
@@ -48,31 +50,31 @@
                 </div>
 
                 <button type="button"
-                        class="close-todo-btn"
-                        @onclick="() => _isCreatingPlanner = false">
+                class="close-todo-btn"
+                @onclick="() => _isCreatingPlanner = false">
                     ×
                 </button>
             </div>
             <EditForm Model="@_plannerCreateModel"
-                      OnValidSubmit="HandleCreatePlannerSubmit">
+            OnValidSubmit="HandleCreatePlannerSubmit">
                 <DataAnnotationsValidator />
                 <div class="todo-form-group">
                     <label for="Title">Title</label>
 
                     <InputText @bind-Value="_plannerCreateModel.Title"
-                               id="Title"
-                               class="todo-input"
-                               placeholder="What is this planner for?" />
+                    id="Title"
+                    class="todo-input"
+                    placeholder="What is this planner for?" />
                 </div>
                 <ValidationSummary />
                 <div class="todo-form-actions">
                     <button type="button"
-                            class="cancel-todo-btn"
-                            @onclick="() => _isCreatingPlanner = false">
+                    class="cancel-todo-btn"
+                    @onclick="() => _isCreatingPlanner = false">
                         Cancel
                     </button>
                     <button type="submit"
-                            class="save-todo-btn">
+                    class="save-todo-btn">
                         Create Planner
                     </button>
                 </div>
@@ -100,7 +102,7 @@
                 @if (!_isCreatingPlanner)
                 {
                     <button class="save-todo-btn"
-                            @onclick="OnCreatePlannerClicked">
+                    @onclick="OnCreatePlannerClicked">
                         Create Planner
                     </button>
                 }
@@ -111,24 +113,24 @@
             <div class="planner-grid">
                 @foreach (var planner in _plannerOverviewModels)
                 {
-                    <a class="planner-card"
-                       href="/planners/@planner.Id">
-
-                        <div class="planner-card-content">
-                            <div class="planner-card-info">
-                                <div class="planner-card-title">
-                                    @planner.Title
-                                </div>
-                                <div class="planner-card-subtitle">
-                                    Open planner
+                    <div class="planner-card-wrapper">
+                        <a class="planner-card" href="/planners/@planner.Id">
+                            <div class="planner-card-content">
+                                <div class="planner-card-info">
+                                    <div class="planner-card-title">
+                                        @planner.Title
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="planner-card-arrow">
-                                →
-                            </div>
-                        </div>
-                    </a>
+                        </a>
+                        <button type="button"
+                                class="planner-card-delete"
+                                @onclick="() => OnDeletePlannerClicked(planner.Id)"
+                                @onclick:stopPropagation="true"
+                                @onclick:preventDefault="true">
+                            ×
+                        </button>
+                    </div>
                 }
             </div>
         }
@@ -139,6 +141,7 @@
     private string? _errorMessage;
 
     private bool _isCreatingPlanner;
+
     private PlannerCreateModel _plannerCreateModel = new();
 
     private List<PlannerOverviewModel> _plannerOverviewModels = new();
@@ -186,4 +189,21 @@
 
         _isCreatingPlanner = false;
     } 
+
+    private async Task OnDeletePlannerClicked(PlannerId id)
+    {
+        var command = new DeletePlannerCommand(id);
+
+        var result = await _sender.Command(command);
+
+        if (result.IsSuccess)
+        {
+            _plannerOverviewModels.RemoveAll(p => p.Id == id);
+        }
+
+        if(result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+        }
+    }
 }
