@@ -159,11 +159,9 @@ h1:focus {
     gap: 8px;
 }
 
-/* Todo card */
-
 .todo-card {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 12px;
     padding: 16px;
     background: white;
@@ -177,7 +175,6 @@ h1:focus {
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
         transform: translateY(-1px);
     }
-
 
 /* Content */
 
@@ -193,6 +190,38 @@ h1:focus {
     line-height: 1.4;
 }
 
+.todo-description {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Action buttons */
+
+.todo-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+    .todo-actions .planner-card-delete {
+        position: static;
+        transform: none;
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+    }
+
+    .todo-actions .todo-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+    }
 
 /* Three dots */
 

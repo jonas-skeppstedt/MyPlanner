@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using MyPlanner.Application.Abstractions.Messaging
 @using MyPlanner.Application.Features.Planners.Commands.AddTodo
+@using MyPlanner.Application.Features.Planners.Commands.RemoveTodo
 @using MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails
 @using MyPlanner.Domain.Planners
 @using MyPlanner.Web.Components.Features.Planners.Extensions
@@ -62,10 +63,18 @@ else
                                 </div>
                             }
                         </div>
-                        <button class="todo-menu-btn">
-                            ...
-                        </button>
-
+                        <div class="todo-actions">
+                            <button type="button"
+                                    class="planner-card-delete"
+                                    @onclick="() => OnRemoveTodoClicked(todo.Id)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true">
+                                ×
+                            </button>
+                            <button class="todo-menu-btn">
+                                ...
+                            </button>
+                        </div>
                     </div>
                 }
             </div>
@@ -171,5 +180,22 @@ else
         }
 
         _isCreatingTodo = false;
+    }
+
+    private async Task OnRemoveTodoClicked(TodoId id)
+    {
+        var command = new RemoveTodoCommand(Planner!.Id, id);
+
+        var result = await _sender.Command(command);
+
+        if (result.IsSuccess)
+        {
+            Planner!.Todos.RemoveAll(t => t.Id == id);
+        }
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+        }
     }
 }
