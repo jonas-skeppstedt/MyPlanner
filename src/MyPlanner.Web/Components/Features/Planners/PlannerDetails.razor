@@ -66,7 +66,7 @@ else
                         <div class="todo-actions">
                             <button type="button"
                                     class="planner-card-delete"
-                                    @onclick="() => OnDeleteTodoClicked(todo.Id)"
+                                    @onclick="() => OnRemoveTodoClicked(todo.Id)"
                                     @onclick:stopPropagation="true"
                                     @onclick:preventDefault="true">
                                 ×
@@ -182,7 +182,7 @@ else
         _isCreatingTodo = false;
     }
 
-    private async Task OnDeleteTodoClicked(TodoId id)
+    private async Task OnRemoveTodoClicked(TodoId id)
     {
         var command = new RemoveTodoCommand(Planner!.Id, id);
 
