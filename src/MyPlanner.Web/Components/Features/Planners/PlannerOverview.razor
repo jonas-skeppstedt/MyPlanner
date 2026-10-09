@@ -95,7 +95,7 @@
 
                     <button type="button"
                             class="close-todo-btn"
-                            @onclick="OnCancelChangePlannerTitle">
+                            @onclick="OnCancelChangePlannerTitleClicked">
                         ×
                     </button>
                 </div>
@@ -118,7 +118,7 @@
                     <div class="todo-form-actions">
                         <button type="button"
                                 class="cancel-todo-btn"
-                                @onclick="OnCancelChangePlannerTitle">
+                                @onclick="OnCancelChangePlannerTitleClicked">
                             Cancel
                         </button>
 
@@ -200,7 +200,6 @@
 
     private bool _isCreatingPlanner;
     private bool _isChangingPlannerTitle;
-    private PlannerId? _editingPlannerId;
 
     private PlannerChangeTitleModel _plannerChangeTitleModel = new();
 
@@ -278,9 +277,9 @@
             return;
         }
 
-        _editingPlannerId = id;
         _plannerChangeTitleModel = new PlannerChangeTitleModel
         {
+            PlannerId = id,
             NewTitle = planner.Title
         };
 
@@ -288,21 +287,15 @@
         _isChangingPlannerTitle = true;  
     }
 
-    private void OnCancelChangePlannerTitle()
+    private void OnCancelChangePlannerTitleClicked()
     {
         _isChangingPlannerTitle = false;
-        _editingPlannerId = null;
     }
 
     private async Task HandleChangePlannerTitleSubmit()
     {
-        if (_editingPlannerId == null)
-        {
-            return;
-        }
-        
         var command = new ChangePlannerTitleCommand(
-            _editingPlannerId.Value,
+            _plannerChangeTitleModel.PlannerId,
             _plannerChangeTitleModel.NewTitle);
 
         var result = await _sender.Command(command);
@@ -315,13 +308,13 @@
 
         if (result.IsNoOp)
         {
-            OnCancelChangePlannerTitle();
+            OnCancelChangePlannerTitleClicked();
             return;
         }
 
         if (result.IsSuccess)
         {
-            var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == _editingPlannerId.Value);
+            var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == _plannerChangeTitleModel.PlannerId);
 
             if (planner != null)
             {
@@ -329,7 +322,7 @@
             }
 
             _errorMessage = null;
-            OnCancelChangePlannerTitle();
+            OnCancelChangePlannerTitleClicked();
         }
     }
 }
