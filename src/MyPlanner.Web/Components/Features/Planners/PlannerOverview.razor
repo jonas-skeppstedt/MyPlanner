@@ -4,6 +4,7 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using MyPlanner.Application.Abstractions.Messaging
+@using MyPlanner.Application.Features.Planners.Commands.ChangePlannerTitle
 @using MyPlanner.Application.Features.Planners.Commands.CreatePlanner
 @using MyPlanner.Application.Features.Planners.Commands.DeletePlanner
 @using MyPlanner.Application.Features.Planners.Queries.GetPlannerOverviews
@@ -82,6 +83,54 @@
         </div>
     }
 
+    @if (_isChangingPlannerTitle)
+    {
+        <div class="edit-title-overlay">
+            <div class="edit-title-card">
+                <div class="create-todo-header">
+                    <div>
+                        <p class="create-todo-eyebrow">EDIT PLANNER</p>
+                        <h4>Change title</h4>
+                    </div>
+
+                    <button type="button"
+                            class="close-todo-btn"
+                            @onclick="OnCancelChangePlannerTitleClicked">
+                        ×
+                    </button>
+                </div>
+
+                <EditForm Model="@_plannerChangeTitleModel"
+                          OnValidSubmit="HandleChangePlannerTitleSubmit">
+                    <DataAnnotationsValidator />
+
+                    <div class="todo-form-group">
+                        <label for="NewTitle">New title</label>
+
+                        <InputText @bind-Value="_plannerChangeTitleModel.NewTitle"
+                                   id="NewTitle"
+                                   class="todo-input"
+                                   placeholder="Enter new title" />
+
+                        <ValidationMessage For="@(() => _plannerChangeTitleModel.NewTitle)" />
+                    </div>
+
+                    <div class="todo-form-actions">
+                        <button type="button"
+                                class="cancel-todo-btn"
+                                @onclick="OnCancelChangePlannerTitleClicked">
+                            Cancel
+                        </button>
+
+                        <button type="submit"
+                                class="save-todo-btn">
+                            Save
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    }
     <div class="planner-overview-section">
         <div class="todo-section-header">
             <h4>Your planners</h4>
@@ -123,13 +172,22 @@
                                 </div>
                             </div>
                         </a>
-                        <button type="button"
-                                class="planner-card-delete"
-                                @onclick="() => OnDeletePlannerClicked(planner.Id)"
-                                @onclick:stopPropagation="true"
-                                @onclick:preventDefault="true">
-                            ×
-                        </button>
+                        <div class="todo-actions planner-overview-actions">
+                            <button type="button"
+                                    class="planner-card-delete"
+                                    @onclick="() => OnDeletePlannerClicked(planner.Id)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true">
+                                ×
+                            </button>
+                            <button type="button" 
+                                    class="todo-menu-btn"
+                                    @onclick="() => OnChangePlannerTitleClicked(planner.Id)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true">
+                                ...
+                            </button>
+                        </div>   
                     </div>
                 }
             </div>
@@ -141,6 +199,9 @@
     private string? _errorMessage;
 
     private bool _isCreatingPlanner;
+    private bool _isChangingPlannerTitle;
+
+    private PlannerChangeTitleModel _plannerChangeTitleModel = new();
 
     private PlannerCreateModel _plannerCreateModel = new();
 
@@ -204,6 +265,64 @@
         if(result.IsFailure)
         {
             _errorMessage = result.Error.Description;
+        }
+    }
+
+    private void OnChangePlannerTitleClicked(PlannerId id)
+    {
+        var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == id);
+
+        if(planner == null)
+        {
+            return;
+        }
+
+        _plannerChangeTitleModel = new PlannerChangeTitleModel
+        {
+            PlannerId = id,
+            NewTitle = planner.Title
+        };
+
+        _errorMessage = null;
+        _isChangingPlannerTitle = true;  
+    }
+
+    private void OnCancelChangePlannerTitleClicked()
+    {
+        _isChangingPlannerTitle = false;
+    }
+
+    private async Task HandleChangePlannerTitleSubmit()
+    {
+        var command = new ChangePlannerTitleCommand(
+            _plannerChangeTitleModel.PlannerId,
+            _plannerChangeTitleModel.NewTitle);
+
+        var result = await _sender.Command(command);
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+            return;
+        }
+
+        if (result.IsNoOp)
+        {
+            OnCancelChangePlannerTitleClicked();
+            return;
+        }
+
+        if (result.IsSuccess)
+        {
+            var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == _plannerChangeTitleModel.PlannerId);
+
+            if (planner != null)
+            {
+                planner.Title = _plannerChangeTitleModel.NewTitle;
+            }
+
+            _errorMessage = null;
+            OnCancelChangePlannerTitleClicked();
         }
     }
 }
