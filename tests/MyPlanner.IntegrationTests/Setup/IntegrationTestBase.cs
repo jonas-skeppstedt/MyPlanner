@@ -44,5 +44,12 @@ namespace MyPlanner.IntegrationTests.Setup
             dbContext.AddRange(planners);
             await dbContext.SaveChangesAsync();
         }
+
+        protected async Task<Planner?> FindPlannerAsync(PlannerId id)
+        {
+            await using var scope = Services.CreateAsyncScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            return await dbContext.Planners.FindAsync(id);
+        }
     }
 }
