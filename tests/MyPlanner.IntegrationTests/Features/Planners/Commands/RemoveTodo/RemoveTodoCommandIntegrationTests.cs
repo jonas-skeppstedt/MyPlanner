@@ -1,4 +1,6 @@
-﻿using MyPlanner.Application.Features.Planners.Commands.RemoveTodo;
+﻿using MyPlanner.Application.Errors;
+using MyPlanner.Application.Features.Planners.Commands.RemoveTodo;
+using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Shared;
 using MyPlanner.Domain.TestData.Planners.Builders;
@@ -11,6 +13,22 @@ namespace MyPlanner.IntegrationTests.Features.Planners.Commands.RemoveTodo
         public RemoveTodoCommandIntegrationTests(IntegrationTestFixture integrationTestFixture)
             : base(integrationTestFixture)
         {
+        }
+
+        [Fact]
+        public async Task Command_ShouldReturnUserNotAuthenticatedError_WhenUserIsNotAuthenticated()
+        {
+            // Arrange
+            SetUnauthenticatedCurrentUser();
+
+            var command = new RemoveTodoCommand(PlannerId.New(), TodoId.New());
+
+            // Act
+            var result = await Sender.Command(command);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(AuthenticationErrors.UserNotAuthenticated, result.Error);
         }
 
         [Fact]
