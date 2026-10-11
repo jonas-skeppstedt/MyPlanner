@@ -1,4 +1,5 @@
-﻿using MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails;
+﻿using MyPlanner.Application.Errors;
+using MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Shared;
@@ -12,6 +13,22 @@ namespace MyPlanner.IntegrationTests.Features.Planners.Queries.GetPlannerDetails
         public GetPlannerDetailsIntegrationTests(IntegrationTestFixture integrationTestFixture)
             : base(integrationTestFixture)
         {
+        }
+
+        [Fact]
+        public async Task Query_ShouldReturnUserNotAuthenticatedError_WhenUserIsNotAuthenticated()
+        {
+            // Arrange
+            SetUnauthenticatedCurrentUser();
+
+            var query = new GetPlannerDetailsQuery(PlannerId.New());
+
+            // Act
+            var result = await Sender.Query(query);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(AuthenticationErrors.UserNotAuthenticated, result.Error);
         }
 
         [Fact]

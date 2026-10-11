@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Abstractions.Messaging;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Infrastructure.Persistence;
@@ -18,6 +19,9 @@ namespace MyPlanner.IntegrationTests.Setup
 
         public async Task InitializeAsync()
         {
+            var currentUserService = (FakeCurrentUserService)Services.GetRequiredService<ICurrentUserService>();
+            currentUserService.Reset();
+
             await using var scope = Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             await dbContext.Database.EnsureDeletedAsync();
@@ -50,6 +54,12 @@ namespace MyPlanner.IntegrationTests.Setup
             await using var scope = Services.CreateAsyncScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             return await dbContext.Planners.FindAsync(id);
+        }
+
+        protected void SetUnauthenticatedCurrentUser()
+        {
+            var currentUserService = (FakeCurrentUserService)Services.GetRequiredService<ICurrentUserService>();
+            currentUserService.SetUnauthenticatedUserId();
         }
     }
 }

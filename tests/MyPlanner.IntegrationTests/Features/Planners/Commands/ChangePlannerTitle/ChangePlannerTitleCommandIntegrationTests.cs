@@ -1,4 +1,6 @@
-﻿using MyPlanner.Application.Features.Planners.Commands.ChangePlannerTitle;
+﻿using MyPlanner.Application.Errors;
+using MyPlanner.Application.Features.Planners.Commands.ChangePlannerTitle;
+using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
 using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
@@ -12,6 +14,22 @@ namespace MyPlanner.IntegrationTests.Features.Planners.Commands.ChangePlannerTit
         public ChangePlannerTitleCommandIntegrationTests(IntegrationTestFixture integrationTestFixture)
             : base(integrationTestFixture)
         {
+        }
+
+        [Fact]
+        public async Task Command_ShouldReturnUserNotAuthenticatedError_WhenUserIsNotAuthenticated()
+        {
+            // Arrange
+            SetUnauthenticatedCurrentUser();
+
+            var command = new ChangePlannerTitleCommand(PlannerId.New(), "Valid title");
+
+            // Act
+            var result = await Sender.Command(command);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(AuthenticationErrors.UserNotAuthenticated, result.Error);
         }
 
         [Fact]

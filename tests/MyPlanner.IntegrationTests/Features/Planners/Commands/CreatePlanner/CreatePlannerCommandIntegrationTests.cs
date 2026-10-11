@@ -1,4 +1,5 @@
-﻿using MyPlanner.Application.Features.Planners.Commands.CreatePlanner;
+﻿using MyPlanner.Application.Errors;
+using MyPlanner.Application.Features.Planners.Commands.CreatePlanner;
 using MyPlanner.IntegrationTests.Setup;
 
 namespace MyPlanner.IntegrationTests.Features.Planners.Commands.CreatePlanner
@@ -8,6 +9,22 @@ namespace MyPlanner.IntegrationTests.Features.Planners.Commands.CreatePlanner
         public CreatePlannerCommandIntegrationTests(IntegrationTestFixture integrationTestFixture)
             : base(integrationTestFixture)
         {
+        }
+
+        [Fact]
+        public async Task Command_ShouldReturnUserNotAuthenticatedError_WhenUserIsNotAuthenticated()
+        {
+            // Arrange
+            SetUnauthenticatedCurrentUser();
+
+            var command = new CreatePlannerCommand("Valid title");
+
+            // Act
+            var result = await Sender.Command(command);
+
+            // Assert
+            Assert.True(result.IsFailure);
+            Assert.Equal(AuthenticationErrors.UserNotAuthenticated, result.Error);
         }
 
         [Fact]
