@@ -17,15 +17,13 @@ namespace MyPlanner.Domain.UnitTests.Planners
             PlannerTitle title,
             Type expectedExceptionType)
         {
-            // Act
             Action act = () => Planner.From(id, ownerId, title);
 
-            // Assert
             Assert.Throws(expectedExceptionType, act);
         }
 
         [Fact]
-        public void From_ShouldReturnPlanner_WhenInputsAreValid()
+        public void From_ShouldReturnPlanner_WhenAllInputsAreValid()
         {
             // Arrange
             var expectedPlannerId = new PlannerId(Guid.NewGuid());
@@ -44,7 +42,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void AddTodo_ShouldThrowExpectedException_WhenTodoIsNull()
+        public void AddTodo_ShouldThrowArgumentNullException_WhenTodoIsNull()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -54,12 +52,13 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void AddTodo_ShouldReturnFailureResult_WhenTodoAlreadyExistsInPlanner()
+        public void AddTodo_ShouldReturnFailureWithTodoAlreadyExistsError_WhenTodoAlreadyExistsInPlanner()
         {
             // Arrange
-            var planner = new PlannerBuilder().Build();
             var todo = new TodoBuilder().Build();
-            _ = planner.AddTodo(todo);
+            var planner = new PlannerBuilder()
+                .WithTodos(todo)
+                .Build();
 
             // Act
             var result = planner.AddTodo(todo);
@@ -71,7 +70,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void AddTodo_ShouldReturnSuccessResult_WhenInputIsValid()
+        public void AddTodo_ShouldReturnSuccess_WhenTodoIsUnique()
         {
             // Arrange
             var todo = new TodoBuilder().Build();
@@ -86,7 +85,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void RemoveTodo_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        public void RemoveTodo_ShouldThrowArgumentException_WhenTodoIdIsEmpty()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -96,7 +95,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void RemoveTodo_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public void RemoveTodo_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
             var todo = new TodoBuilder().Build();
@@ -114,7 +113,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void RemoveTodo_ShouldReturnSuccessResult_WhenTodoExists()
+        public void RemoveTodo_ShouldReturnSuccess_WhenTodoExists()
         {
             // Arrange
             var todo = new TodoBuilder().Build();
@@ -131,7 +130,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldThrowExpectedException_WhenNewTitleIsNull()
+        public void ChangeTitle_ShouldThrowArgumentNullException_WhenNewTitleIsNull()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -141,7 +140,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldReturnNoOpResult_WhenNewTitleIsIdentical()
+        public void ChangeTitle_ShouldReturnNoOp_WhenNewTitleIsIdentical()
         {
             // Arrange
             var identicalTitle = "Identical title";
@@ -161,7 +160,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldReturnSuccessResult_WhenInputIsValidNewTitle()
+        public void ChangeTitle_ShouldReturnSuccess_WhenInputIsValidNewTitle()
         {
             // Arrange
             var initialTitle = PlannerTitle.Create("Initial title").Value;
@@ -180,66 +179,71 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void Delete_ShouldThrowExpectedException_WhenRequestedByUserIdIsEmpty()
+        public void Delete_ShouldThrowArgumentException_WhenRequestedByUserIdIsEmpty()
         {
-            //Arrange
+            // Arrange
             var planner = new PlannerBuilder().Build();
 
-            //Act & Assert
+            // Act & Assert
             Assert.Throws<ArgumentException>(() => planner.Delete(default));
 
         }
 
         [Fact]
-        public void Delete_ShouldReturnFailureResult_WhenRequestedByUserIdIsNotOwnerId()
+        public void Delete_ShouldReturnFailureWithPlannerOnlyOwnerCanDeleteError_WhenRequestedByUserIdIsNotOwnerId()
         {
-            //Arrange
+            // Arrange
+            var notOwnerId = new UserId(Guid.NewGuid());
+            var ownerId = new UserId(Guid.NewGuid());
+
             var planner = new PlannerBuilder()
-                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .WithOwnerId(ownerId)
                 .Build();
 
-            var notOwnerId = new UserId(Guid.NewGuid());
-
-            //Act
+            // Act
             var result = planner.Delete(notOwnerId);
 
-            //Assert
+            // Assert
             Assert.True(result.IsFailure);
             Assert.Equal(PlannerErrors.OnlyOwnerCanDelete, result.Error);
         }
 
         [Fact]
-        public void Delete_ShouldReturnSuccessResult_WhenRequestedByUserIdIsOwnerId()
+        public void Delete_ShouldReturnSuccess_WhenRequestedByUserIdIsOwnerId()
         {
-            //Arrange
+            // Arrange
+            var ownerId = new UserId(Guid.NewGuid());
+
             var planner = new PlannerBuilder()
-                .WithOwnerId(new UserId(Guid.NewGuid()))
+                .WithOwnerId(ownerId)
                 .Build();
 
-            //Act
-            var result = planner.Delete(planner.OwnerId);
+            // Act
+            var result = planner.Delete(ownerId);
 
-            //Assert
+            // Assert
             Assert.True(result.IsSuccess);
         }
 
         [Fact]
-        public void ChangeTodoTitle_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        public void ChangeTodoTitle_ShouldThrowArgumentException_WhenTodoIdIsEmpty()
         {
             // Arrange
+            var newTitle = TodoTitle.Create("New title").Value;
+
             var planner = new PlannerBuilder().Build();
-            var newTitle = TodoTitle.Create("Valid title").Value;
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => planner.ChangeTodoTitle(default, newTitle));
         }
 
         [Fact]
-        public void ChangeTodoTitle_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public void ChangeTodoTitle_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
-            var planner = new PlannerBuilder().Build();
             var newTitle = TodoTitle.Create("New title").Value;
+
+            var planner = new PlannerBuilder().Build();
 
             // Act
             var result = planner.ChangeTodoTitle(TodoId.New(), newTitle);
@@ -250,10 +254,11 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTodoTitle_ShouldReturnSuccessResult_WhenInputsAreValid()
+        public void ChangeTodoTitle_ShouldReturnSuccess_WhenTodoExistsAndNewTitleIsValid()
         {
             // Arrange
             var initialTitle = TodoTitle.Create("Initial title").Value;
+            var newTitle = TodoTitle.Create("New title").Value;
 
             var todo = new TodoBuilder()
                 .WithTodoTitle(initialTitle)
@@ -263,8 +268,6 @@ namespace MyPlanner.Domain.UnitTests.Planners
                 .WithTodos(todo)
                 .Build();
 
-            var newTitle = TodoTitle.Create("New title").Value;
-
             // Act
             var result = planner.ChangeTodoTitle(todo.Id, newTitle);
 
@@ -273,22 +276,24 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTodoDescription_ShouldThrowExpectedException_WhenTodoIdIsEmpty()
+        public void ChangeTodoDescription_ShouldThrowArgumentException_WhenTodoIdIsEmpty()
         {
             // Arrange
-            var planner = new PlannerBuilder().Build();
             var newDescription = TodoDescription.Create("New description").Value;
+
+            var planner = new PlannerBuilder().Build();
 
             // Act & Assert
             Assert.Throws<ArgumentException>(() => planner.ChangeTodoDescription(default, newDescription));
         }
 
         [Fact]
-        public void ChangeTodoDescription_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public void ChangeTodoDescription_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
-            var planner = new PlannerBuilder().Build();
             var newDescription = TodoDescription.Create("New description").Value;
+
+            var planner = new PlannerBuilder().Build();
 
             // Act
             var result = planner.ChangeTodoDescription(TodoId.New(), newDescription);
@@ -299,10 +304,11 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTodoDescription_ShouldReturnSuccessResult_WhenInputsAreValid()
+        public void ChangeTodoDescription_ShouldReturnSuccess_WhenTodoExistsAndNewDescriptionIsValid()
         {
             // Arrange
             var initialDescription = TodoDescription.Create("Initial description").Value;
+            var newDescription = TodoDescription.Create("New description").Value;
 
             var todo = new TodoBuilder()
                 .WithTodoDescription(initialDescription)
@@ -311,8 +317,6 @@ namespace MyPlanner.Domain.UnitTests.Planners
             var planner = new PlannerBuilder()
                 .WithTodos(todo)
                 .Build();
-
-            var newDescription = TodoDescription.Create("New description").Value;
 
             // Act
             var result = planner.ChangeTodoDescription(todo.Id, newDescription);

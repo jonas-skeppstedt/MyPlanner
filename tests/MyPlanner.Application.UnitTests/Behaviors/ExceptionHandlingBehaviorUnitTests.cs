@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MyPlanner.Application.Behaviors;
 using MyPlanner.Application.Errors;
-using MyPlanner.Application.TestData.Behaviors;
+using MyPlanner.Application.UnitTests.TestData;
 using MyPlanner.Domain.Common;
 
 namespace MyPlanner.Application.UnitTests.Behaviors
@@ -31,7 +31,7 @@ namespace MyPlanner.Application.UnitTests.Behaviors
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenAnExceptionIsThrown()
+        public async Task Handle_ShouldReturnFailureWithSystemUnexpectedError_WhenAnExceptionIsThrown()
         {
             // Arrange
             var nextCalled = false;

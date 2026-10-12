@@ -3,7 +3,7 @@ using Moq;
 using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Behaviors;
 using MyPlanner.Application.Errors;
-using MyPlanner.Application.TestData.Behaviors;
+using MyPlanner.Application.UnitTests.TestData;
 using MyPlanner.Domain.Common;
 using MyPlanner.Domain.Shared;
 
@@ -21,7 +21,7 @@ namespace MyPlanner.Application.UnitTests.Behaviors
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnExpectedError_WhenCurrentUserIsNotAuthenticated()
+        public async Task Handle_ShouldReturnUserNotAuthenticatedError_WhenCurrentUserIsNotAuthenticated()
         {
             // Arrange
             UserId defaultUserId = default;

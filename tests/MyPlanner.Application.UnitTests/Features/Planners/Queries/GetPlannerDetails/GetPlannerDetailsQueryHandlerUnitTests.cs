@@ -21,7 +21,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Queries.GetPlannerDe
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWithProvidedIdIsNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWithProvidedIdIsNotFound()
         {
             // Arrange
             var query = new GetPlannerDetailsQuery(PlannerId.New());
@@ -30,7 +30,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Queries.GetPlannerDe
                 .Setup(x => x.GetPlannerDetailsAsync(
                     It.IsAny<PlannerId>(),
                     It.IsAny<UserId>(),
-                    CancellationToken.None))
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync((PlannerDetailsDto?)null);
 
             // Act
@@ -42,7 +42,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Queries.GetPlannerDe
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenPlannerWithProvidedIdExists()
+        public async Task Handle_ShouldReturnSuccessWithPlannerDetailsDto_WhenPlannerWithProvidedIdExists()
         {
             // Arrange
             var plannerId = PlannerId.New();
@@ -55,7 +55,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Queries.GetPlannerDe
                 .Returns(userId);
 
             _plannerQueriesMock
-                .Setup(x => x.GetPlannerDetailsAsync(plannerId, userId, CancellationToken.None))
+                .Setup(x => x.GetPlannerDetailsAsync(plannerId, userId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedDto);
 
             // Act

@@ -35,7 +35,7 @@ namespace MyPlanner.Domain.UnitTests.Shared
         }
 
         [Fact]
-        public void ThrowIfEmpty_ShouldThrowArgumentException_WhenPlannerIdIsEmpty()
+        public void ThrowIfEmpty_ShouldThrowArgumentException_WhenUserIdIsEmpty()
         {
             // Arrange
             UserId emptyUserId = default;

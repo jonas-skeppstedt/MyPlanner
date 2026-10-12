@@ -6,10 +6,9 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
     public class TodoDescriptionUnitTests
     {
         [Fact]
-        public void Create_ShouldReturnExpectedFailureResult_WhenInputIsTooLong()
+        public void Create_ShouldReturnFailureWithTodoDescriptionTooLongError_WhenInputIsTooLong()
         {
             // Arrange
-            var expectedError = TodoDescriptionErrors.DescriptionTooLong;
             var invalidDescription = new string('x', TodoDescription.MaxLength + 1);
 
             // Act
@@ -17,11 +16,11 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
 
             // Assert
             Assert.True(result.IsFailure);
-            Assert.Equal(expectedError, result.Error);
+            Assert.Equal(TodoDescriptionErrors.DescriptionTooLong, result.Error);
         }
 
         [Fact]
-        public void Create_ShouldReturnSuccessResult_WhenInputIsValid()
+        public void Create_ShouldReturnSuccessWithTodoDescription_WhenInputIsValid()
         {
             // Arrange
             var expectedValue = "Valid description";
@@ -38,27 +37,21 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_ShouldReturnTodoDescriptionEmpty_WhenInputStringIsNullOrEmpty(string? description)
+        public void Create_ShouldReturnSuccessWithTodoDescriptionEmpty_WhenInputStringIsNullOrEmpty(
+            string? emptyDescription)
         {
-            // Arrange
-            var expectedValue = TodoDescription.Empty;
+            var result = TodoDescription.Create(emptyDescription!);
 
-            // Act
-            var result = TodoDescription.Create(description!);
-
-            // Assert
             Assert.True(result.IsSuccess);
-            Assert.Equal(expectedValue, result.Value);
+            Assert.Equal(TodoDescription.Empty, result.Value);
         }
 
-
         [Fact]
-        public void Create_ShouldReturnSuccessResultWithTrimmedValue_WhenInputHasLeadingAndTrailingWhitespaces()
+        public void Create_ShouldReturnSuccessWithTrimmedTodoDescription_WhenInputHasLeadingAndTrailingWhitespaces()
         {
             // Arrange
-            var whitespace = new string(' ', TodoDescription.MaxLength);
             var expectedValue = "Valid description";
-            var inputWithWhitespace = whitespace + expectedValue + whitespace;
+            var inputWithWhitespace = $"   {expectedValue}   ";
 
             // Act
             var result = TodoDescription.Create(inputWithWhitespace);

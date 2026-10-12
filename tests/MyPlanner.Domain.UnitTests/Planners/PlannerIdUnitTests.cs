@@ -7,10 +7,8 @@ namespace MyPlanner.Domain.UnitTests.Planners
         [Fact]
         public void New_ShouldReturnNonEmptyPlannerId()
         {
-            // Act
             var plannerId = PlannerId.New();
 
-            // Assert
             Assert.NotEqual(Guid.Empty, plannerId.Value);
         }
 

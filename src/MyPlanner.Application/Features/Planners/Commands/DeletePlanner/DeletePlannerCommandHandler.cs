@@ -24,7 +24,7 @@ namespace MyPlanner.Application.Features.Planners.Commands.DeletePlanner
                 _userContext.UserId,
                 cancellationToken);
 
-            if (planner == null)
+            if (planner is null)
             {
                 return PlannerErrors.NotFound;
             }

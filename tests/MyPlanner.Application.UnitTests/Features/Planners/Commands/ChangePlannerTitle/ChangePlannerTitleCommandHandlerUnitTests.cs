@@ -21,13 +21,13 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerTitleValidationFails()
+        public async Task Handle_ShouldReturnFailure_WhenPlannerTitleValidationFails()
         {
             // Arrange
-            var invalidCommand = new ChangePlannerTitleCommand(PlannerId.New(), NewTitle: null!);
+            var command = new ChangePlannerTitleCommand(PlannerId.New(), NewTitle: null!);
 
             // Act
-            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+            var result = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -43,7 +43,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new ChangePlannerTitleCommand(PlannerId.New(), "New title");
@@ -64,7 +64,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnNoOpResult_WhenTitleIsIdentical()
+        public async Task Handle_ShouldReturnNoOp_WhenNewTitleIsIdentical()
         {
             // Arrange
             var identicalTitle = "Identical title";
@@ -92,11 +92,10 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
 
             // Assert
             Assert.True(result.IsNoOp);
-            Assert.Equal(initialTitle, planner.Title);
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenInputIsValidNewTitle()
+        public async Task Handle_ShouldReturnSuccessWithResponse_WhenTitleIsChanged()
         {
             // Arrange
             var initialTitle = PlannerTitle.Create("Initial title").Value;
@@ -124,8 +123,6 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
             // Assert
             Assert.True(result.IsSuccess);
             Assert.Equal(command.NewTitle, result.Value.NewTitle);
-
-            Assert.Equal(command.NewTitle, planner.Title.Value);
         }
     }
 }

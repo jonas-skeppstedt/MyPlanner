@@ -34,7 +34,7 @@ namespace MyPlanner.Application.Features.Planners.Commands.AddTodo
                 _userContext.UserId,
                 cancellationToken);
 
-            if (planner == null)
+            if (planner is null)
             {
                 return PlannerErrors.NotFound;
             }

@@ -22,7 +22,7 @@ namespace MyPlanner.Application.UnitTests.Contexts
         }
 
         [Fact]
-        public void SetUserId_ShouldThrowExpectedException_WhenUserIsAlreadySet()
+        public void SetUserId_ShouldThrowInvalidOperationException_WhenUserIsAlreadySet()
         {
             // Arrange
             var userId = new UserId(Guid.NewGuid());

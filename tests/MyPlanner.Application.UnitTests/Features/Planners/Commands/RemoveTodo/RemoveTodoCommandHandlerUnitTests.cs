@@ -20,7 +20,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.RemoveTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new RemoveTodoCommand(PlannerId.New(), TodoId.New());
@@ -41,7 +41,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.RemoveTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public async Task Handle_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -68,7 +68,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.RemoveTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenTodoIsRemoved()
+        public async Task Handle_ShouldReturnSuccess_WhenTodoIsRemoved()
         {
             // Arrange
             var todo = new TodoBuilder().Build();

@@ -21,13 +21,13 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoT
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoTitleValidationFails()
+        public async Task Handle_ShouldReturnFailure_WhenTodoTitleValidationFails()
         {
             // Arrange
-            var invalidCommand = new ChangeTodoTitleCommand(PlannerId.New(), TodoId.New(), NewTitle: null!);
+            var command = new ChangeTodoTitleCommand(PlannerId.New(), TodoId.New(), NewTitle: null!);
 
             // Act
-            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+            var result = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -43,7 +43,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoT
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new ChangeTodoTitleCommand(PlannerId.New(), TodoId.New(), "New title");
@@ -64,10 +64,11 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoT
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public async Task Handle_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
+
             var command = new ChangeTodoTitleCommand(planner.Id, TodoId.New(), "New title");
 
             _userContextMock
@@ -90,7 +91,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoT
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnNoOpResult_WhenNewTitleIsIdentical()
+        public async Task Handle_ShouldReturnNoOp_WhenNewTitleIsIdentical()
         {
             // Arrange
             var identicalTitle = "Identical title";
@@ -125,7 +126,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoT
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenInputIsValidNewTitle()
+        public async Task Handle_ShouldReturnSuccessWithResponse_WhenTitleIsChanged()
         {
             // Arrange
             var initialTitle = TodoTitle.Create("Initial title").Value;

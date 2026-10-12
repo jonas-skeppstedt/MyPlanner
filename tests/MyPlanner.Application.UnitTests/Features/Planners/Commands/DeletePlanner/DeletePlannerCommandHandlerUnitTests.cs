@@ -20,7 +20,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.DeletePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -47,7 +47,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.DeletePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenUserIsNotOwner()
+        public async Task Handle_ShouldReturnFailureWithPlannerOnlyOwnerCanDeleteError_WhenCurrentUserIsNotOwner()
         {
             //Arrange
             var planner = new PlannerBuilder().Build();
@@ -79,7 +79,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.DeletePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenDeleteIsSuccessful()
+        public async Task Handle_ShouldReturnSuccess_WhenPlannerIsDeleted()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();

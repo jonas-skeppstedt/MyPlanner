@@ -19,13 +19,13 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.CreatePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerTitleValidationFails()
+        public async Task Handle_ShouldReturnFailure_WhenPlannerTitleValidationFails()
         {
             // Arrange
-            var invalidCommand = new CreatePlannerCommand(string.Empty);
+            var command = new CreatePlannerCommand(Title: null!);
 
             // Act
-            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+            var result = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -37,11 +37,12 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.CreatePlann
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenCommandIsValid()
+        public async Task Handle_ShouldReturnSuccessWithResponse_WhenPlannerIsCreated()
         {
             // Arrange
             var expectedTitle = "Valid title";
             var expectedUserId = new UserId(Guid.NewGuid());
+
             var command = new CreatePlannerCommand(expectedTitle);
 
             Planner? addedPlanner = null;
@@ -64,7 +65,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.CreatePlann
 
             Assert.NotNull(addedPlanner);
             Assert.Equal(result.Value.PlannerId, addedPlanner.Id);
-            Assert.Equal(expectedTitle, addedPlanner.Title.ToString());
+            Assert.Equal(expectedTitle, addedPlanner.Title.Value);
             Assert.Equal(expectedUserId, addedPlanner.OwnerId);
 
             // Verify

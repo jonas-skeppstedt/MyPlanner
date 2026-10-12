@@ -85,7 +85,7 @@ namespace MyPlanner.Domain.Planners
 
             var todo = _todos.FirstOrDefault(t => t.Id == id);
 
-            if (todo == null)
+            if (todo is null)
             {
                 return TodoErrors.NotFound;
             }
@@ -111,7 +111,7 @@ namespace MyPlanner.Domain.Planners
 
             var todo = _todos.FirstOrDefault(t => t.Id == id);
 
-            if (todo == null)
+            if (todo is null)
             {
                 return TodoErrors.NotFound;
             }

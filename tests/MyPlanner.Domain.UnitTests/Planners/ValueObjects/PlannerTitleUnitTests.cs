@@ -9,24 +9,19 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_ShouldReturnExpectedFailureResult_WhenInputIsNullOrWhitespace(string? title)
+        public void Create_ShouldReturnFailureWithPlannerTitleRequiredError_WhenInputIsNullOrWhitespace(
+            string? invalidTitle)
         {
-            // Arrange
-            var expectedError = PlannerTitleErrors.TitleRequired;
+            var result = PlannerTitle.Create(invalidTitle!);
 
-            // Act
-            var result = PlannerTitle.Create(title!);
-
-            // Assert
             Assert.True(result.IsFailure);
-            Assert.Equal(expectedError, result.Error);
+            Assert.Equal(PlannerTitleErrors.TitleRequired, result.Error);
         }
 
         [Fact]
-        public void Create_ShouldReturnExpectedFailureResult_WhenInputIsTooLong()
+        public void Create_ShouldReturnFailureWithPlannerTitleTooLongError_WhenInputIsTooLong()
         {
             // Arrange
-            var expectedError = PlannerTitleErrors.TitleTooLong;
             var invalidTitle = new string('x', PlannerTitle.MaxLength + 1);
 
             // Act
@@ -34,11 +29,11 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
 
             // Assert
             Assert.True(result.IsFailure);
-            Assert.Equal(expectedError, result.Error);
+            Assert.Equal(PlannerTitleErrors.TitleTooLong, result.Error);
         }
 
         [Fact]
-        public void Create_ShouldReturnSuccessResult_WhenInputIsValid()
+        public void Create_ShouldReturnSuccessWithPlannerTitle_WhenInputIsValid()
         {
             // Arrange
             var expectedValue = "Valid title";
@@ -52,12 +47,11 @@ namespace MyPlanner.Domain.UnitTests.Planners.ValueObjects
         }
 
         [Fact]
-        public void Create_ShouldReturnSuccessResultWithTrimmedValue_WhenInputHasLeadingAndTrailingWhitespaces()
+        public void Create_ShouldReturnSuccessWithTrimmedPlannerTitle_WhenInputHasLeadingAndTrailingWhitespaces()
         {
             // Arrange
-            var whitespace = new string(' ', PlannerTitle.MaxLength);
             var expectedValue = "Valid title";
-            var inputWithWhitespace = whitespace + expectedValue + whitespace;
+            var inputWithWhitespace = $"   {expectedValue}   ";
 
             // Act
             var result = PlannerTitle.Create(inputWithWhitespace);

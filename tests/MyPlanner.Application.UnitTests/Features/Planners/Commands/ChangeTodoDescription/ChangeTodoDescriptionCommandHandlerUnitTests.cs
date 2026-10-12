@@ -21,17 +21,18 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoD
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoDescriptionValidationFails()
+        public async Task Handle_ShouldReturnFailure_WhenTodoDescriptionValidationFails()
         {
             // Arrange
             var tooLongDescription = new string('x', TodoDescription.MaxLength + 1);
-            var invalidCommand = new ChangeTodoDescriptionCommand(
+
+            var command = new ChangeTodoDescriptionCommand(
                 PlannerId.New(),
                 TodoId.New(),
                 tooLongDescription);
 
             // Act
-            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+            var result = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -47,7 +48,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoD
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new ChangeTodoDescriptionCommand(
@@ -71,7 +72,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoD
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoDoesNotExist()
+        public async Task Handle_ShouldReturnFailureWithTodoNotFoundError_WhenTodoDoesNotExist()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
@@ -101,7 +102,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoD
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnNoOpResult_WhenNewDescriptionIsIdentical()
+        public async Task Handle_ShouldReturnNoOp_WhenNewDescriptionIsIdentical()
         {
             // Arrange
             var identicalDescription = "Identical description";
@@ -139,7 +140,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangeTodoD
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenInputIsValidNewDescription()
+        public async Task Handle_ShouldReturnSuccessWithResponse_WhenDescriptionIsChanged()
         {
             // Arrange
             var initialDescription = TodoDescription.Create("Initial description").Value;

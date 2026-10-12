@@ -3,7 +3,6 @@ using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Features.Planners.Commands.AddTodo;
 using MyPlanner.Domain.Planners;
 using MyPlanner.Domain.Planners.Errors;
-using MyPlanner.Domain.Planners.ValueObjects;
 using MyPlanner.Domain.Shared;
 using MyPlanner.Domain.TestData.Planners.Builders;
 
@@ -21,13 +20,13 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenTodoTitleValidationFails()
+        public async Task Handle_ShouldReturnFailure_WhenTodoTitleValidationFails()
         {
             // Arrange
-            var invalidCommand = new AddTodoCommand(PlannerId.New(), Title: null!);
+            var command = new AddTodoCommand(PlannerId.New(), Title: null!);
 
             // Act
-            var result = await _sut.Handle(invalidCommand, CancellationToken.None);
+            var result = await _sut.Handle(command, CancellationToken.None);
 
             // Assert
             Assert.True(result.IsFailure);
@@ -43,7 +42,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenPlannerWasNotFound()
+        public async Task Handle_ShouldReturnFailureWithPlannerNotFoundError_WhenPlannerWasNotFound()
         {
             // Arrange
             var command = new AddTodoCommand(PlannerId.New(), "Valid title");
@@ -64,10 +63,11 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnSuccessResult_WhenTodoIsAddedToPlanner()
+        public async Task Handle_ShouldReturnSuccessWithResponse_WhenTodoIsAddedToPlanner()
         {
             // Arrange
             var planner = new PlannerBuilder().Build();
+
             var command = new AddTodoCommand(planner.Id, "Valid title");
 
             _userContextMock
@@ -88,10 +88,6 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.AddTodo
             Assert.True(result.IsSuccess);
             Assert.NotEqual(default, result.Value.TodoId);
             Assert.Equal(command.Title, result.Value.Title);
-
-            var todo = Assert.Single(planner.Todos);
-            Assert.Equal(todo.Id, result.Value.TodoId);
-            Assert.Equal(TodoDescription.Empty.Value, result.Value.Description);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace MyPlanner.Application.Features.Planners.Commands.ChangePlannerTitle
                 _userContext.UserId,
                 cancellationToken);
 
-            if (planner == null)
+            if (planner is null)
             {
                 return PlannerErrors.NotFound;
             }
