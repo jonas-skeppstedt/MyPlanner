@@ -14,15 +14,13 @@ namespace MyPlanner.Domain.UnitTests.Planners
             TodoTitle title,
             Type expectedExceptionType)
         {
-            // Act
             Action act = () => Todo.From(id, title);
 
-            // Assert
             Assert.Throws(expectedExceptionType, act);
         }
 
         [Fact]
-        public void From_ShouldReturnTodo_WhenInputsAreValid()
+        public void From_ShouldReturnTodo_WhenAllInputsAreValid()
         {
             // Arrange
             var expectedTodoId = new TodoId(Guid.NewGuid());
@@ -39,7 +37,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldThrowExpectedException_WhenTodoTitleIsNull()
+        public void ChangeTitle_ShouldThrowArgumentNullException_WhenNewTodoTitleIsNull()
         {
             // Arrange
             var todo = new TodoBuilder().Build();
@@ -49,7 +47,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldReturnNoOpResult_WhenNewTitleIsIdentical()
+        public void ChangeTitle_ShouldReturnNoOp_WhenNewTitleIsIdentical()
         {
             // Arrange
             var identicalTitle = "Identical title";
@@ -69,7 +67,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeTitle_ShouldReturnSuccessResult_WhenInputIsValidNewTitle()
+        public void ChangeTitle_ShouldReturnSuccess_WhenInputIsValidNewTitle()
         {
             // Arrange
             var initialTitle = TodoTitle.Create("Initial title").Value;
@@ -88,7 +86,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeDescription_ShouldThrowExpectedException_WhenTodoDescriptionIsNull()
+        public void ChangeDescription_ShouldThrowArgumentNullException_WhenNewTodoDescriptionIsNull()
         {
             // Arrange
             var todo = new TodoBuilder().Build();
@@ -98,7 +96,7 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeDescription_ShouldReturnNoOpResult_WhenNewDescriptionIsIdentical()
+        public void ChangeDescription_ShouldReturnNoOp_WhenNewDescriptionIsIdentical()
         {
             // Arrange
             var identicalDescription = "Identical description";
@@ -119,16 +117,15 @@ namespace MyPlanner.Domain.UnitTests.Planners
         }
 
         [Fact]
-        public void ChangeDescription_ShouldReturnSuccessResult_WhenInputIsValidNewDescription()
+        public void ChangeDescription_ShouldReturnSuccess_WhenInputIsValidNewDescription()
         {
             // Arrange
             var initialDescription = TodoDescription.Create("Initial description").Value;
+            var newDescription = TodoDescription.Create("New description").Value;
 
             var todo = new TodoBuilder()
                 .WithTodoDescription(initialDescription)
                 .Build();
-
-            var newDescription = TodoDescription.Create("New description").Value;
 
             // Act
             var result = todo.ChangeDescription(newDescription);
