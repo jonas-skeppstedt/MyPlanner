@@ -27,7 +27,7 @@ namespace MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails
                 _userContext.UserId,
                 cancellationToken);
 
-            if (dto == null)
+            if (dto is null)
             {
                 return PlannerErrors.NotFound;
             }
