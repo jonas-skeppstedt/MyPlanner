@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MyPlanner.Web\MyPlanner.Web.csproj" />
-    <ProjectReference Include="..\MyPlanner.Application.TestData\MyPlanner.Application.TestData.csproj" />
     <ProjectReference Include="..\MyPlanner.Domain.TestData\MyPlanner.Domain.TestData.csproj" />
   </ItemGroup>
 

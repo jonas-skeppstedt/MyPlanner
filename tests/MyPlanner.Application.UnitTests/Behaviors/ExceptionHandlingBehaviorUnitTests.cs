@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MyPlanner.Application.Behaviors;
 using MyPlanner.Application.Errors;
-using MyPlanner.Application.TestData.Behaviors;
+using MyPlanner.Application.UnitTests.TestData;
 using MyPlanner.Domain.Common;
 
 namespace MyPlanner.Application.UnitTests.Behaviors

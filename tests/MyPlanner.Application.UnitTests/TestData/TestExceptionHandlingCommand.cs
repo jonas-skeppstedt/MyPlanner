@@ -1,6 +1,6 @@
 ﻿using MyPlanner.Application.Abstractions.Messaging;
 
-namespace MyPlanner.Application.TestData.Behaviors
+namespace MyPlanner.Application.UnitTests.TestData
 {
     public sealed class TestExceptionHandlingCommand() : ICommand;
 }
