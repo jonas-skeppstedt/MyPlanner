@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using MyPlanner.Application.Abstractions.Messaging
 @using MyPlanner.Application.Features.Planners.Commands.AddTodo
+@using MyPlanner.Application.Features.Planners.Commands.ChangeTodoTitle
 @using MyPlanner.Application.Features.Planners.Commands.RemoveTodo
 @using MyPlanner.Application.Features.Planners.Queries.GetPlannerDetails
 @using MyPlanner.Domain.Planners
@@ -63,7 +64,7 @@ else
                                 </div>
                             }
                         </div>
-                        <div class="todo-actions">
+                        <div class="todo-actions planner-overview-actions">
                             <button type="button"
                                     class="planner-card-delete"
                                     @onclick="() => OnRemoveTodoClicked(todo.Id)"
@@ -71,7 +72,11 @@ else
                                     @onclick:preventDefault="true">
                                 ×
                             </button>
-                            <button class="todo-menu-btn">
+                            <button type="button"
+                                    class="todo-menu-btn"
+                                    @onclick="() => OnChangeTodoTitleClicked(todo.Id)"
+                                    @onclick:stopPropagation="true"
+                                    @onclick:preventDefault="true">
                                 ...
                             </button>
                         </div>
@@ -122,6 +127,54 @@ else
         </EditForm>
     </div>
 }
+@if (_isChangingTodoTitle)
+{
+    <div class="edit-title-overlay">
+        <div class="edit-title-card">
+            <div class="create-todo-header">
+                <div>
+                    <p class="create-todo-eyebrow">EDIT TODO</p>
+                    <h4>Change title</h4>
+                </div>
+
+                <button type="button"
+                        class="close-todo-btn"
+                        @onclick="OnCancelChangeTodoTitleClicked">
+                    ×
+                </button>
+            </div>
+
+            <EditForm Model="@_todoChangeTitleModel"
+                      OnValidSubmit="HandleChangeTodoTitleSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="todo-form-group">
+                    <label for="NewTitle">New title</label>
+
+                    <InputText @bind-Value="_todoChangeTitleModel.NewTitle"
+                               id="NewTitle"
+                               class="todo-input"
+                               placeholder="Enter new title" />
+
+                    <ValidationMessage For="@(() => _todoChangeTitleModel.NewTitle)" />
+                </div>
+
+                <div class="todo-form-actions">
+                    <button type="button"
+                            class="cancel-todo-btn"
+                            @onclick="OnCancelChangeTodoTitleClicked">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="save-todo-btn">
+                        Save
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+}
 
 
 @code {
@@ -133,6 +186,10 @@ else
     private PlannerDetailsModel? Planner { get; set; }
 
     private bool _isCreatingTodo;
+    private bool _isChangingTodoTitle;
+
+
+    private TodoChangeTitleModel _todoChangeTitleModel = new();
     private TodoCreateModel _todoCreateModel = new();
 
     protected override async Task OnInitializedAsync()
@@ -197,5 +254,65 @@ else
         {
             _errorMessage = result.Error.Description;
         }
+    }
+
+    private void OnChangeTodoTitleClicked(TodoId id)
+    {
+        var todo = Planner?.Todos.FirstOrDefault(t => t.Id == id);
+
+        if (todo == null)
+        {
+            return;
+        }
+
+        _todoChangeTitleModel = new TodoChangeTitleModel
+        {
+            PlannerId = Planner!.Id,
+            TodoId = id,
+            NewTitle = todo.Title
+        };
+
+        _errorMessage = null;
+        _isChangingTodoTitle = true;
+    }
+
+    private async Task HandleChangeTodoTitleSubmit()
+    {
+        var command = new ChangeTodoTitleCommand(
+            _todoChangeTitleModel.PlannerId,
+            _todoChangeTitleModel.TodoId,
+            _todoChangeTitleModel.NewTitle);
+
+        var result = await _sender.Command(command);
+
+        if (result.IsFailure)
+        {
+            _errorMessage = result.Error.Description;
+            return;
+        }
+
+        if (result.IsNoOp)
+        {
+            OnCancelChangeTodoTitleClicked();
+            return;
+        }
+
+        if (result.IsSuccess)
+        {
+            var todo = Planner?.Todos.FirstOrDefault(t => t.Id == result.Value.TodoId);
+
+            if (todo != null)
+            {
+                todo.Title = result.Value.NewTitle;
+            }
+
+            _errorMessage = null;
+            OnCancelChangeTodoTitleClicked();
+        }
+    }
+
+    private void OnCancelChangeTodoTitleClicked()
+    {
+        _isChangingTodoTitle = false;
     }
 }
