@@ -2,5 +2,5 @@
 
 namespace MyPlanner.Application.UnitTests.TestData
 {
-    public sealed class TestExceptionHandlingCommand() : ICommand;
+    public sealed record TestExceptionHandlingCommand() : ICommand;
 }

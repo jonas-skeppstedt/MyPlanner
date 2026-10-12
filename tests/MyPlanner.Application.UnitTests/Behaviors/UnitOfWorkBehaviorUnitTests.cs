@@ -4,7 +4,6 @@ using MyPlanner.Application.Abstractions;
 using MyPlanner.Application.Behaviors;
 using MyPlanner.Application.UnitTests.TestData;
 using MyPlanner.Domain.Common;
-using MyPlanner.Domain.Planners.Errors;
 
 namespace MyPlanner.Application.UnitTests.Behaviors
 {
@@ -36,14 +35,14 @@ namespace MyPlanner.Application.UnitTests.Behaviors
 
             // Verify
             _unitOfWorkMock
-                .Verify(x => x.SaveChangesAsync(), Times.Once);
+                .Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
         public async Task Handle_ShouldNotCallSaveChangesAsync_WhenResponseIsFailure()
         {
             // Arrange
-            var expectedError = PlannerTitleErrors.TitleRequired;
+            var expectedError = Error.Validation("Test.Error", "A test error.");
             RequestHandlerDelegate<Result> next = _ =>
             {
                 return Task.FromResult(Result.Failure(expectedError));
@@ -54,10 +53,11 @@ namespace MyPlanner.Application.UnitTests.Behaviors
 
             // Assert
             Assert.True(result.IsFailure);
+            Assert.Equal(expectedError, result.Error);
 
             // Verify
             _unitOfWorkMock
-                .Verify(x => x.SaveChangesAsync(), Times.Never);
+                .Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace MyPlanner.Application.UnitTests.Behaviors
 
             // Verify
             _unitOfWorkMock
-                .Verify(x => x.SaveChangesAsync(), Times.Never);
+                .Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }

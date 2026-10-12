@@ -31,7 +31,7 @@ namespace MyPlanner.Application.UnitTests.Behaviors
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFailureResult_WhenAnExceptionIsThrown()
+        public async Task Handle_ShouldReturnFailureWithSystemUnexpectedError_WhenAnExceptionIsThrown()
         {
             // Arrange
             var nextCalled = false;

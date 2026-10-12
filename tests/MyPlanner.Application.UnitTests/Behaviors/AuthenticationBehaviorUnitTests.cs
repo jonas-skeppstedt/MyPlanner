@@ -21,7 +21,7 @@ namespace MyPlanner.Application.UnitTests.Behaviors
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnExpectedError_WhenCurrentUserIsNotAuthenticated()
+        public async Task Handle_ShouldReturnUserNotAuthenticatedError_WhenCurrentUserIsNotAuthenticated()
         {
             // Arrange
             UserId defaultUserId = default;
