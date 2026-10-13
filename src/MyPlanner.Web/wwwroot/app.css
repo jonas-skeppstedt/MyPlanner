@@ -335,6 +335,36 @@ h1:focus {
         box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.1);
     }
 
+.todo-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 10;
+    min-width: 150px;
+    padding: 5px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+    .todo-dropdown button {
+        display: block;
+        width: 100%;
+        padding: 9px 10px;
+        border: none;
+        border-radius: 5px;
+        background: transparent;
+        color: #334155;
+        text-align: left;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+        .todo-dropdown button:hover {
+            background: #f1f5f9;
+        }
+
 /* Buttons */
 
 .todo-form-actions {
