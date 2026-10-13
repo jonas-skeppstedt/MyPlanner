@@ -77,6 +77,7 @@ namespace MyPlanner.IntegrationTests.Features.Planners.Commands.ChangePlannerTit
 
             // Assert
             Assert.True(result.IsSuccess);
+            Assert.Equal(command.PlannerId, result.Value.PlannerId);
             Assert.Equal(command.NewTitle, result.Value.NewTitle);
 
             var persistedPlanner = await FindPlannerAsync(command.PlannerId);

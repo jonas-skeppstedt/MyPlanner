@@ -122,6 +122,7 @@ namespace MyPlanner.Application.UnitTests.Features.Planners.Commands.ChangePlann
 
             // Assert
             Assert.True(result.IsSuccess);
+            Assert.Equal(command.PlannerId, result.Value.PlannerId);
             Assert.Equal(command.NewTitle, result.Value.NewTitle);
         }
     }
