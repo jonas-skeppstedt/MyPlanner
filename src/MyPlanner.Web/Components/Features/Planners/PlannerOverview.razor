@@ -314,7 +314,7 @@
 
         if (result.IsSuccess)
         {
-            var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == _plannerChangeTitleModel.PlannerId);
+            var planner = _plannerOverviewModels.FirstOrDefault(p => p.Id == result.Value.PlannerId);
 
             if (planner != null)
             {

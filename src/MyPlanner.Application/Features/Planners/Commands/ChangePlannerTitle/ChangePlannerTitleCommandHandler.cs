@@ -47,7 +47,7 @@ namespace MyPlanner.Application.Features.Planners.Commands.ChangePlannerTitle
                 return Result<ChangePlannerTitleResponse>.NoOp();
             }
 
-            var response = new ChangePlannerTitleResponse(planner.Title.Value);
+            var response = new ChangePlannerTitleResponse(planner.Id, planner.Title.Value);
 
             return Result<ChangePlannerTitleResponse>.Success(response);
         }
