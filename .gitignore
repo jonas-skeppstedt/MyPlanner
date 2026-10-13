@@ -270,7 +270,6 @@ ClientBin/
 orleans.codegen.cs
 
 # App settings
-appsettings.json
 appsettings.Development.json
 appsettings.Production.json
 
