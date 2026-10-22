@@ -1,0 +1,44 @@
+name: Discord PR Notification
+
+on:
+  pull_request:
+    types: [ "closed" ]
+
+jobs:
+  discord-pr-notification:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send PR notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_MERGED_BY: ${{ github.event.pull_request.merged_by.login }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          REPO_NAME: ${{ github.repository }}
+        run: |
+          BODY_SECTION="${PR_BODY:+
+          **Description**:
+          $PR_BODY
+          ----------------------------------------------}"
+          BODY_SECTION="${BODY_SECTION:----------------------------------------------}"
+          
+          MESSAGE="**PR merged to 'main' in $REPO_NAME**
+
+          **Author:** $PR_AUTHOR
+          **Merged by:** $PR_MERGED_BY
+
+          **Title:**
+          $PR_TITLE ([#$PR_NUMBER]($PR_URL))
+          $BODY_SECTION"
+          
+          PAYLOAD=$(jq -n --arg content "$MESSAGE" '{content: $content}')
+
+          curl -H "Content-Type: application/json" \
+               -d "$PAYLOAD" \
+               "$DISCORD_WEBHOOK"
